@@ -1,0 +1,3 @@
+INSERT TABLE players(
+    pass
+)
