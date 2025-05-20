@@ -7,7 +7,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Whatever RPG")
         self.setGeometry(100, 100, 800, 600)
 
-
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
