@@ -39,7 +39,7 @@ class Database:
             self.connection.rollback()
             return None
 
-    """ CONNECTION/REGISTERING """
+    """ -------------------------------PLAYERS----------------------------------------- """
 
     def try_connect(self, username, mdp):
         self.execute_query("SELECT id, password_hash FROM players WHERE username = %s", (username,))
@@ -59,12 +59,20 @@ class Database:
         if user_data:
             return False
         self.execute_query("INSERT INTO players (username) ")
-    
-    """ PLAYER """
 
-    #setters
     def add_player(self, username):
         self.execute_query("INSERT INTO players (username) VALUES (%s)", (username,))
+
+    #getters
+    
+    def get_player(self, player_id):
+        self.execute_query("SELECT * FROM players WHERE id = %s", (player_id,))
+        return self.cursor.fetchone()
+
+    
+    """ -------------------------------ITEMS----------------------------------------- """
+
+    #setters
 
     def add_item(self, name, item_type, power, price):
         self.execute_query(
@@ -73,16 +81,17 @@ class Database:
         )
     
     #getters
+
     def get_item(self, name):
         pass
 
-    def get_player(self, player_id):
-        self.execute_query("SELECT * FROM players WHERE id = %s", (player_id,))
-        return self.cursor.fetchone()
     
-
-    """ ITEMS """
-
+    
     def search_items(self, item_type):
         self.execute_query("SELECT * FROM items WHERE type = %s", (item_type,))
         return self.cursor.fetchall()
+    
+
+    """ -------------------------------CHARACTERS----------------------------------------- """
+
+    
