@@ -62,18 +62,24 @@ class Database:
     
     """ PLAYER """
 
-    def create_player(self, username):
+    #setters
+    def add_player(self, username):
         self.execute_query("INSERT INTO players (username) VALUES (%s)", (username,))
-
-    def get_player(self, player_id):
-        self.execute_query("SELECT * FROM players WHERE id = %s", (player_id,))
-        return self.cursor.fetchone()
 
     def add_item(self, name, item_type, power, price):
         self.execute_query(
             "INSERT INTO items (name, type, power, price) VALUES (%s, %s, %s, %s)",
             (name, item_type, power, price)
         )
+    
+    #getters
+    def get_item(self, name):
+        pass
+
+    def get_player(self, player_id):
+        self.execute_query("SELECT * FROM players WHERE id = %s", (player_id,))
+        return self.cursor.fetchone()
+    
 
     """ ITEMS """
 
