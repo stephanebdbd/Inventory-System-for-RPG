@@ -54,11 +54,11 @@ class Database:
         return True
 
     def try_register(self, username, mdp):
-        self.execute_query("SELECT id, password_hash FROM players WHERE username = %s", (username,))
+        self.execute_query("SELECT id FROM players WHERE username = %s", (username,))
         user_data = self.cursor.fetchone()
-        if not user_data:
+        if user_data:
             return False
-        self.execute_query("INSERT INTO players ")
+        self.execute_query("INSERT INTO players (username) ")
     
     """ PLAYER """
 
