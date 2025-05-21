@@ -1,7 +1,7 @@
 import mysql.connector
 
 
-
+#tamer 
 class Database :
     def __init__(self, db_path):
         self.db_path = db_path
@@ -16,4 +16,3 @@ class Database :
     def getSpellLis(self):
         pass
 
-    
