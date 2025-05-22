@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+import bcrypt
 
 class Database:
     def __init__(self, host="localhost", user="root", password="", database="rpg_db"):
