@@ -1,4 +1,5 @@
 import csv
+import json
 import xml
 import sys
 import os
@@ -58,7 +59,7 @@ PNJs = {"Nom": "name",
 def importXML(file: str, db: Database):
     pass
     
-
+    
 
 def importCSV(file: str, db: Database):
     with open(file, 'r', encoding='utf-8') as f:
@@ -85,8 +86,25 @@ def importCSV(file: str, db: Database):
 
 
 def importJSON(file: str, db: Database):
-    print(file)
-    pass
+    with open(file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+        if "personnages" in file:
+            for charater in data["personnages"]:
+                db.add_character(charater["Nom"],
+                                 charater["Classe"],
+                                 charater["Vie"],
+                                 charater["Mana"],
+                                 charater["Force"],
+                                 charater["intelligence"],
+                                 charater["Agilite"],
+                                 charater["utilisateur"])
+        if "pnjs" in file:
+            for pnj in data["PNJs"]:
+                db.add_npc(pnj["Nom"],
+                           pnj["Dialogue"],
+                           pnj["Quêtes"],
+                           pnj["Inventaire"])
+
 
 def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
