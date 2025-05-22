@@ -63,7 +63,7 @@ class Database:
         if user_data:
             return False
         self.execute_query("INSERT INTO players (username) ")
-        #pas fini zeb
+        #pas fini zeb       
 
     def add_player(self, username: str) -> None:
         self.execute_query("INSERT INTO players (username) VALUES (%s)", (username,))
@@ -184,3 +184,4 @@ class Database:
 
     def verify_password(self, input_password: str, stored_hash: str) -> None:
         pass
+    
