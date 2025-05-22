@@ -3,6 +3,43 @@ import xml
 import sys
 import os
 
+Spells = {"ID": "id",
+         "Nom": "name",
+         "Coût en Mana": "mana",
+         "Temps de Recharge": "cd",
+         "Puissance d'Attaque": "ap"
+         }
+Players = {"ID": "id",
+           "NomUtilisateur": "username",
+           "Niveau": "level",
+           "XP": "xp",
+           "Monnaie": "golds",
+           "SlotsInventaire": "inventorySlots"
+           }
+Items = {"Nom": "name",
+         "Type": "type",
+         "Propriétés": "effect",
+         "Prix": "price"
+         }
+Monsters = {"monstre": "monster",
+            "attaque": "attack",
+            "defense": "defense",
+            "drops": "drops",
+            "nombre": "quantity",
+            "probabilité": "probability",
+            "vie": "lifePoints",
+            "Or": "gold"
+            }
+Quests = {"quête": "quest",
+          "Descriptiopn": "description",
+          "Difiiculté": "difficulty",
+          "Expérience": "exp",
+          "Récompenses": "rewards",
+          "0r": "gold",
+          "Objets": "items"
+          }
+
+
 def importXML(file: str, path: str):
     print(file)
     pass
