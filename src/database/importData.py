@@ -1,6 +1,6 @@
 import csv
 import json
-import xml
+import xml.etree.ElementTree as xmlTree
 import sys
 import os
 from database import Database
@@ -57,9 +57,41 @@ PNJs = {"Nom": "name",
         }
 
 def importXML(file: str, db: Database):
-    pass
-    
-    
+    tree = xmlTree.parse(file)
+    root = tree.getroot()
+    if "monstres" in file:
+        for monster in root.findall('monstre'):
+            drops = []
+            for item in monster.findall('drops'):
+                drop = {}
+                if item.tag is "Or":
+                    drop["name"] = "gold"
+                    drop["probability"] = item.findtext('probabilité')
+                    drop["quantity"] = item.findtext('nombre')
+                else:
+                    drop["name"] = item.tag
+                    drop["probability"] = item.findtext('probabilité')
+                    drop["quantity"] = item.findtext('nombre')
+                drop.append(drop)
+            db.add_monster(int(monster.findtext('id')),
+                           monster.findtext('nom'),
+                           int(monster.findall('attaque')),
+                           int(monster.findall('defense')),
+                           int(monster.findall('vie')),
+                           drops)
+    if "quetes" in file:
+        for quest in root.findall('quêtes'):
+            rewards = []
+            rewards.append(int(quest.findall('Or')))
+            for rew in quest.findall('Récompenses'):
+                if rew.tag != "Or":
+                    rewards.append(rew)
+            db.add_quest(quest.findtext('Description'),
+                         quest.findtext('Nom'),
+                           int(quest.findtext('Difficulté')),
+                           int(quest.findall('Expérience')),
+                           rewards)
+
 
 def importCSV(file: str, db: Database):
     with open(file, 'r', encoding='utf-8') as f:
