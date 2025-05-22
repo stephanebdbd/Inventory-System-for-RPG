@@ -31,18 +31,33 @@ Monsters = {"monstre": "monster",
             "Or": "gold"
             }
 Quests = {"quête": "quest",
-          "Descriptiopn": "description",
-          "Difiiculté": "difficulty",
+          "Description": "description",
+          "Difficulté": "difficulty",
           "Expérience": "exp",
           "Récompenses": "rewards",
-          "0r": "gold",
+          "Or": "gold",
           "Objets": "items"
           }
-
+Characters = {"personnages": "characters",
+              "Nom": "name",
+            "Classe": "classe",
+            "Vie": "lifePoints",
+            "Mana": "mana",
+            "Force": "strength",
+            "Intelligence": "intelligence",
+            "Agilite": "agility",
+            "utilisateur": "username"
+}
+PNJs = {"Nom": "name",
+        "Dialoque": "dialogue",
+        "Quêtes": "quests",
+        "Inventaire": "inventory"
+        }
 
 def importXML(file: str, path: str):
-    print(file)
-    pass
+    with open(file, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+
 
 def importCSV(file: str, path: str):
     print(file)
