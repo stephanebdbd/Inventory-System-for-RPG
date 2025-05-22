@@ -63,11 +63,12 @@ class Database:
         if user_data:
             return False
         self.execute_query("INSERT INTO players (username) ")
-        #pas fini zeb       
+        #pas fini zeb
 
-    def add_player(self, username: str) -> None:
+    def add_player(self,id: int, username: str, level: int=0, exp: int=0, currency: int=0, invSlots: int=0) -> None:
         self.execute_query("INSERT INTO players (username) VALUES (%s)", (username,))
-
+        #to complete 
+        
     def get_player(self, player_id: int): #jsp cque ca retourne, une liste?? dunno
         self.execute_query("SELECT * FROM players WHERE id = %s", (player_id,))
         return self.cursor.fetchone()
