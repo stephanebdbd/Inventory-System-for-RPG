@@ -27,13 +27,13 @@ def main():
         host="localhost",
         user="root",
         password="",  
-        database="rpg_db"
+        database="rpg"
     )
 
     cursor = db.get_cursor()
 
     # Adjusted path to where the file actually is:
-    query_file_path = os.path.join("database", "queries.sql")
+    query_file_path = os.path.join("database","schema", "queries.sql")
     run_queries_from_file(cursor, query_file_path)
 
 if __name__ == "__main__":
