@@ -40,15 +40,17 @@ class Database:
             key = None
             query = []
             for line in f:
-                if line == '':
+                stripped = line.strip()
+
+                if not stripped:
                     continue
                 elif line.startswith("--"):
                     if key and query:
                         self.queries[key] = ' '.join(query)
                         query = []
-                    key = line.strip("--").strip()
+                    key = line.lstrip('-').strip()
                 else:
-                    query.append(line.strip)
+                    query.append(stripped)
 
     def execute_query(self, queryKey, params=None):
         """Exécute une requête SQL générique."""
