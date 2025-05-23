@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+import sqlparse
 
 
 class Database:
@@ -35,7 +36,19 @@ class Database:
     
     def parseQueries(self, path):
         """Parse les queries et les fait correcspondre a une clef dans un dictionnaire"""
-        pass
+        with open(path, 'r', encoding='utf-8') as f:
+            key = None
+            query = []
+            for line in f:
+                if line == '':
+                    continue
+                elif line.startswith("--"):
+                    if key and query:
+                        self.queries[key] = ' '.join(query)
+                        query = []
+                    key = line.strip("--").strip()
+                else:
+                    query.append(line.strip)
 
     def execute_query(self, queryKey, params=None):
         """Exécute une requête SQL générique."""
