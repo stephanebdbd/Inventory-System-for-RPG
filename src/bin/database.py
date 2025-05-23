@@ -10,6 +10,7 @@ class Database:
         self.database = database
         self.connection = None
         self.cursor = None
+        self.connect()
 
     def connect(self):
         """Établit une connexion à la base de données."""
@@ -78,6 +79,8 @@ class Database:
 
     def update_player_level(self, player_id: int, new_level: int) -> None:
         pass
+    def get_cursor(self):
+        return self.cursor
 
     """ ----------------------------- INVENTORY ---------------------------------------- """
 
