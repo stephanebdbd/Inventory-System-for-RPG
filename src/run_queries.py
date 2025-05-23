@@ -1,4 +1,4 @@
-from database.database import Database
+from bin.database import Database
 import os
 
 def run_queries_from_file(cursor, file_path):
