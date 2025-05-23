@@ -73,12 +73,12 @@ def importXML(file: str, db: Database):
                     drop["probability"] = item.findtext('probabilité')
                     drop["quantity"] = item.findtext('nombre')
                 drop.append(drop)
-            db.add_monster(int(monster.findtext('id')),
+            db.execute_query("add_monster", [int(monster.findtext('id')),
                            monster.findtext('nom'),
                            int(monster.findall('attaque')),
                            int(monster.findall('defense')),
                            int(monster.findall('vie')),
-                           drops)
+                           drops])
     if "quetes" in file:
         for quest in root.findall('quêtes'):
             rewards = []
@@ -86,11 +86,11 @@ def importXML(file: str, db: Database):
             for rew in quest.findall('Récompenses'):
                 if rew.tag != "Or":
                     rewards.append(rew)
-            db.add_quest(quest.findtext('Description'),
+            db.execute_query("add_quest", [quest.findtext('Description'),
                          quest.findtext('Nom'),
                            int(quest.findtext('Difficulté')),
                            int(quest.findall('Expérience')),
-                           rewards)
+                           rewards])
 
 
 def importCSV(file: str, db: Database):
@@ -105,16 +105,16 @@ def importCSV(file: str, db: Database):
                                 row["SlotsInventaire"])
         if "objets" in file:
             for row in reader:
-                db.add_item(row["Nom"],
+                db.execute_query("add_item", [row["Nom"],
                               row["Type"],
                               row["Propriétés"],
-                              row["Prix"])
+                              row["Prix"]])
         if "sorts" in file:
             for row in reader:
-                db.add_spell(row["ID"],
+                db.execute_query("add_spell", [row["ID"],
                              row["Coût en Mana"],
                              row["Temps de Recharge"],
-                             row["Puissance d'Attaque"])
+                             row["Puissance d'Attaque"]])
 
 
 def importJSON(file: str, db: Database):
@@ -122,20 +122,20 @@ def importJSON(file: str, db: Database):
         data = json.load(f)
         if "personnages" in file:
             for charater in data["personnages"]:
-                db.add_character(charater["Nom"],
+                db.execute_query("add_character", [charater["Nom"],
                                  charater["Classe"],
                                  charater["Vie"],
                                  charater["Mana"],
                                  charater["Force"],
                                  charater["intelligence"],
                                  charater["Agilite"],
-                                 charater["utilisateur"])
+                                 charater["utilisateur"]])
         if "pnjs" in file:
             for pnj in data["PNJs"]:
-                db.add_npc(pnj["Nom"],
+                db.execute_query("add_npc", [pnj["Nom"],
                            pnj["Dialogue"],
                            pnj["Quêtes"],
-                           pnj["Inventaire"])
+                           pnj["Inventaire"]])
 
 
 def clear_screen():
