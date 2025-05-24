@@ -4,4 +4,5 @@ CREATE TABLE  IF NOT EXISTS Player(
     level       INT DEFAULT 0,
     Experience  INT DEFAULT 0,
     Money       INT DEFAULT 0,
+    -- characters (with the slotsinventaire to create the primary inventory)
 );
