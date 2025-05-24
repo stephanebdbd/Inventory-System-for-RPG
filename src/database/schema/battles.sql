@@ -1,3 +1,3 @@
-CREATE TABLE Battle(
+CREATE TABLE  IF NOT EXISTS Battle(
     BattleID  INT NOT NULL,
 );
