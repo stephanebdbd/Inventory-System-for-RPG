@@ -1,16 +1,17 @@
-CREATE TABLE IF NOT EXISTS Monstre (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    vie INT DEFAULT 100,
-    attaque INT DEFAULT 10,
-    defense INT DEFAULT 10
+CREATE TABLE IF NOT EXISTS Monster (
+    MonsterID INT PRIMARY KEY NOT NULL,
+    Attack INT DEFAULT 10,
+    Defense INT DEFAULT 10
+    MonsterName VARCHAR(100) NOT NULL,
+    LifePoints INT DEFAULT 100,
+    DropedID INT NOT NULL,
+    FOREIGN KEY (DropedID) REFERENCES RewardDroped(DropedID)
 );
--- Table to store which monsters drop which objects
--- we will need it for query 6
-CREATE TABLE IF NOT EXISTS Butin (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    monstre_id INT,
-    objet_id INT,
-    FOREIGN KEY (monstre_id) REFERENCES Monstre(id),
-    FOREIGN KEY (objet_id) REFERENCES Objet(id)
+
+CREATE TABLE IF NOT EXISTS RewardDroped(
+    DropedID INT AUTO_INCREMENT PRIMARY KEY,
+    MonsterID INT NOT NULL,
+    GoldQuantity INT DEFAULT 0,
+    GoldProbability INT DEFAULT 0,
+    --items & probability
 );

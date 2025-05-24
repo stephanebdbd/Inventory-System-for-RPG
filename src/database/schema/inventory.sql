@@ -1,25 +1,35 @@
-CREATE TABLE Inventory(
+CREATE TABLE  IF NOT EXISTS Inventory(
     InventoryID INT PRIMARY KEY AUTO_INCREMENT,
+    ItemID INT,
+    FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
 );
 
-CREATE TABLE Item(
+CREATE TABLE  IF NOT EXISTS Item(
     ItemID  INT PRIMARY KEY AUTO_INCREMENT,
     Name    VARCHAR(15) NOT NULL,
     Price   INT NOT NULL,
 );
 
-CREATE TABLE Weapon(
-    pass
+CREATE TABLE  IF NOT EXISTS Weapon(
+    ItemID INT NOT NULL,
+    AttackPower INT NOT NULL,
+    FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
 );
 
-CREATE TABLE Armor(
-    pass
+CREATE TABLE  IF NOT EXISTS Armor(
+    ItemID INT NOT NULL,
+    Defense INT NOT NULL,
+    FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
 );
 
-CREATE TABLE Potion(
-    pass
+CREATE TABLE  IF NOT EXISTS Potion(
+    ItemID INT NOT NULL,
+    Healing INT NOT NULL,
+    FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
 );
 
-CREATE TABLE Artefact(
-    pass
+CREATE TABLE  IF NOT EXISTS Artefact(
+    ItemID INT NOT NULL,
+    Effect VARCHAR(50) NOT NULL,
+    FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
 );
