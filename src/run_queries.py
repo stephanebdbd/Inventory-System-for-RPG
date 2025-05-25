@@ -4,8 +4,14 @@ import os
 def run_queries_from_file(cursor, file_path):
     try:
         with open(file_path, 'r') as f:
-            content = f.read()
-            queries = content.split(';')
+            # Read and clean lines
+            lines = f.readlines()
+            cleaned_lines = [line for line in lines if not line.strip().startswith('--') and line.strip() != '']
+            cleaned_sql = "\n".join(cleaned_lines)
+
+            # Split queries by ;
+            queries = cleaned_sql.split(';')
+
             for idx, query in enumerate(queries):
                 query = query.strip()
                 if query:

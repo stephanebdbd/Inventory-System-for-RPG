@@ -1,0 +1,31 @@
+DROP TABLE IF EXISTS Artefact, Potion, Armor, Weapon, Objet;
+
+CREATE TABLE IF NOT EXISTS Objet (
+    ObjetID INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(50) NOT NULL,
+    Price INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Weapon (
+    ObjetID INT PRIMARY KEY,
+    AttackPower INT NOT NULL,
+    FOREIGN KEY (ObjetID) REFERENCES Objet(ObjetID)
+);
+
+CREATE TABLE IF NOT EXISTS Armor (
+    ObjetID INT PRIMARY KEY,
+    Defense INT NOT NULL,
+    FOREIGN KEY (ObjetID) REFERENCES Objet(ObjetID)
+);
+
+CREATE TABLE IF NOT EXISTS Potion (
+    ObjetID INT PRIMARY KEY,
+    Healing INT NOT NULL,
+    FOREIGN KEY (ObjetID) REFERENCES Objet(ObjetID)
+);
+
+CREATE TABLE IF NOT EXISTS Artefact (
+    ObjetID INT PRIMARY KEY,
+    Effect VARCHAR(50) NOT NULL,
+    FOREIGN KEY (ObjetID) REFERENCES Objet(ObjetID)
+);

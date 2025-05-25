@@ -1,4 +1,4 @@
-CREATE TABLE  IF NOT EXISTS Character(
+CREATE TABLE  IF NOT EXISTS Characters(
     CharID       INT PRIMARY KEY AUTO_INCREMENT,
     Name VARCHAR(15) NOT NULL,
     ClassName VARCHAR(50) NOT NULL,
@@ -8,11 +8,11 @@ CREATE TABLE  IF NOT EXISTS Character(
     Intelligence INT DEFAULT 0,
     Agility      INT DEFAULT 0,
     userName    VARCHAR(25) NOT NULL,
-    FOREIGN KEY (ClassName) REFERENCES Class(Name),
+    FOREIGN KEY (ClassName) REFERENCES Class(Name)
 );
 
 CREATE TABLE  IF NOT EXISTS Class(
-    Name    VARCHAR(50)     NOT NULL,
+    Name    VARCHAR(50)     NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS  Spell(
@@ -20,5 +20,5 @@ CREATE TABLE IF NOT EXISTS  Spell(
     SpellName VARCHAR(25) PRIMARY KEY NOT NULL,
     ManaCost INT DEFAULT 0,
     LoadingTime INT DEFAULT 0,
-    AttackPower INT DEFAULT 0,
+    AttackPower INT DEFAULT 0
 );
