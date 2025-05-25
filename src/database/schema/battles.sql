@@ -6,3 +6,5 @@ CREATE TABLE IF NOT EXISTS Battle (
     FOREIGN KEY (PlayerID) REFERENCES Player(PlayerID),
     FOREIGN KEY (MonsterID) REFERENCES Monstre(id)
 );
+
+-- Juve is a finished club
