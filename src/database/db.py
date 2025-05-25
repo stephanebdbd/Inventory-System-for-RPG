@@ -1,6 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-import sqlparse
 
 
 class Database:

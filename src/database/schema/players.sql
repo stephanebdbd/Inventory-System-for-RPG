@@ -3,5 +3,5 @@ CREATE TABLE  IF NOT EXISTS Player(
     Username    VARCHAR(50)     NOT NULL UNIQUE,
     level       INT DEFAULT 0,
     Experience  INT DEFAULT 0,
-    Money       INT DEFAULT 0
+    Money       INT DEFAULT 0,
 );
