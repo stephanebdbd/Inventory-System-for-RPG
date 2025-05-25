@@ -7,4 +7,4 @@ CREATE TABLE IF NOT EXISTS Battle (
     FOREIGN KEY (MonsterID) REFERENCES Monstre(id)
 );
 
--- Juve is a finished club
+-- Juve is still a finished club
