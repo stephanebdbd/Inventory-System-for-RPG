@@ -36,18 +36,6 @@ class Weapon(Item):
         self.itempType = "Arme"
         self.attackPower = attackPower
 
-    def getItemName(self):
-        super().getItemName()
-
-    def getItemType(self):
-        return super().getItemType()
-    
-    def getItemProperties(self):
-        return super().getItemProperties
-    
-    def getItemPrice(self):
-        return super().getItemPrice
-
     def getAttackPower(self):
         return self.attackPower
     
