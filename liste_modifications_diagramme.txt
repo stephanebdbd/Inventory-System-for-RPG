@@ -1,0 +1,27 @@
+classe Item:
+- rajouter attributs: itemType, itemProperties
+	
+	classe Artefact (enfant de Item):
+	- EffectDescription = itemProperties (voir fichier csv)
+	  -> donc on peut supprimer EffectDescription je crois
+
+
+
+
+-----------------------------------------------------------
+
+
+classe Player:
+
+- rajouter attribut SlotsInventory
+
+
+-------------------------------------------------------------
+
+
+class Spell:
+
+- rajouter attribut spell_id (id voir fichier csv)
+
+---------------------------------------------------------------
+
