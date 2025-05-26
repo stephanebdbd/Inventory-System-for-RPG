@@ -5,57 +5,6 @@ import sys
 import os
 from database import Database
 
-Spells = {"ID": "id",
-         "Nom": "name",
-         "Coût en Mana": "mana",
-         "Temps de Recharge": "cd",
-         "Puissance d'Attaque": "ap"
-         }
-Players = {"ID": "id",
-           "NomUtilisateur": "username",
-           "Niveau": "level",
-           "XP": "xp",
-           "Monnaie": "currency",
-           "SlotsInventaire": "inventorySlots"
-           }
-Items = {"Nom": "name",
-         "Type": "type",
-         "Propriétés": "effect",
-         "Prix": "price"
-         }
-Monsters = {"monstre": "monster",
-            "attaque": "attack",
-            "defense": "defense",
-            "drops": "drops",
-            "nombre": "quantity",
-            "probabilité": "probability",
-            "vie": "lifePoints",
-            "Or": "gold"
-            }
-Quests = {"quête": "quest",
-          "Description": "description",
-          "Difficulté": "difficulty",
-          "Expérience": "exp",
-          "Récompenses": "rewards",
-          "Or": "gold",
-          "Objets": "items"
-          }
-Characters = {"personnages": "characters",
-              "Nom": "name",
-            "Classe": "classe",
-            "Vie": "lifePoints",
-            "Mana": "mana",
-            "Force": "strength",
-            "Intelligence": "intelligence",
-            "Agilite": "agility",
-            "utilisateur": "username"
-}
-PNJs = {"Nom": "name",
-        "Dialoque": "dialogue",
-        "Quêtes": "quests",
-        "Inventaire": "inventory"
-        }
-
 def importXML(file: str, db: Database):
     tree = xmlTree.parse(file)
     root = tree.getroot()
