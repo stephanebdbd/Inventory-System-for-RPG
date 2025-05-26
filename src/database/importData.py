@@ -72,7 +72,7 @@ def importXML(file: str, db: Database):
                     drop["name"] = item.tag
                     drop["probability"] = item.findtext('probabilité')
                     drop["quantity"] = item.findtext('nombre')
-                drop.append(drop)
+                drops.append(drop)
             db.execute_query("add_monster", [int(monster.findtext('id')),
                            monster.findtext('nom'),
                            int(monster.findall('attaque')),
@@ -82,7 +82,9 @@ def importXML(file: str, db: Database):
     if "quetes" in file:
         for quest in root.findall('quêtes'):
             rewards = []
-            rewards.append(int(quest.findall('Or')))
+            gold = quest.findtext('Or')
+            if gold:
+                rewards.append(int(gold))
             for rew in quest.findall('Récompenses'):
                 if rew.tag != "Or":
                     rewards.append(rew)
@@ -101,7 +103,7 @@ def importCSV(file: str, db: Database):
                 db.add_player(row["ID"],
                                 row["Niveau"],
                                 row["XP"], 
-                                row["Monaie"],
+                                row["Monnaie"],
                                 row["SlotsInventaire"])
         if "objets" in file:
             for row in reader:
@@ -150,19 +152,22 @@ def main():
     )
     db.connect()
     clear_screen()
+    if len(sys.argv) < 2:
+        print("Missing directory argument!")
+        return
     while True:
         print("** Enter [q] to leave, [r] to clear **\n")
         file = input("Enter file name: ")
         path = os.path.join(sys.argv[1], file)
-        if "csv" in file:
+        if file.endswith('.csv'):
             importCSV(path, db)
-        if "xlm" in file:
+        if file.endswith('.xml'):
             importXML(path, db)
-        if "json" in path:
+        if file.endswith('.json'):
             importJSON(path, db)
-        if file is "r":
+        if file == "r":
             clear_screen()
-        if file is "q":
+        if file == "q":
             return
 
 if __name__ == "__main__":
