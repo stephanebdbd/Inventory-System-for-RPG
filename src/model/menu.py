@@ -1,5 +1,5 @@
 class Menu:
-    def __init__(self, name, sons):
+    def __init__(self, name, sons = None):
         self.meMenu = name
         self.mySons = sons
 
@@ -9,3 +9,5 @@ class Menu:
     def getMenu(self):
         return self.meMenu
         
+    def setSons(self, sons):
+        self.mySons = sons
