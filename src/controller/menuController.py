@@ -47,7 +47,7 @@ class MenuController:
         message = None
         pwTurn = False
         while True:
-            self.view.displayRegister(login, username, password, pwTurn, message)
+            self.view.displayLoginRegister(login, username, password, pwTurn, message)
             message = None
             key = getkey()
             if key == keys.ESCAPE:

@@ -3,7 +3,7 @@ from mysql.connector import Error
 
 
 class Database:
-    def __init__(self, host="localhost", user="root", password="", database="rpg_db"):
+    def __init__(self, host, user, password, database):
         self.host = host
         self.user = user
         self.password = password
@@ -19,7 +19,7 @@ class Database:
                 host=self.host,
                 user=self.user,
                 password=self.password,
-                database=self.database
+                database=self.database,
             )
             self.cursor = self.connection.cursor(dictionary=True)
             print("Connexion à MySQL réussie !")
