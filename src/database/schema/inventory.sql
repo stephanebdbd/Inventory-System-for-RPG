@@ -1,11 +1,21 @@
-DROP TABLE IF EXISTS Inventaire;
+DROP TABLE IF EXISTS Inventory;
 
-CREATE TABLE IF NOT EXISTS Inventaire (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    pnj_id INT,
-    objet_id INT,
-    quantite INT DEFAULT 1,
+CREATE TABLE IF NOT EXISTS Inventory ();
+-- parent class of inventories
+
+CREATE TABLE IF NOT EXISTS CharacterInventory (
+    InventoryID INT AUTO_INCREMENT PRIMARY KEY,
+    CharID INT NOT NULL,
     AmountSlots INT DEFAULT 0,
-    FOREIGN KEY (pnj_id) REFERENCES PNJ(id),
-    FOREIGN KEY (objet_id) REFERENCES Objet(ObjetID)
+    FOREIGN KEY (CharID) REFERENCES Characters(CharID),
 );
+
+CREATE TABLE IF NOT EXISTS NPCInventory (
+    InventoryID INT AUTO_INCREMENT PRIMARY KEY,
+    npcID INT NOT NULL,
+    FOREIGN KEY (npcID) REFERENCES NPC(npcID),
+);
+
+CREATE TABLE IF EXISTS InventoryItem ()
+-- linking tables between items and individual inventories by items counted by tuples
+-- as characters can possess many of a same item
