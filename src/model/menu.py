@@ -1,12 +1,12 @@
 class Menu:
-    def __init__(self, name, sons = None):
-        self.meMenu = name
+    def __init__(self, title, sons = None):
+        self.meMenu = title
         self.mySons = sons
 
     def getSons(self):
         return self.mySons
     
-    def getMenu(self):
+    def getTitle(self):
         return self.meMenu
         
     def setSons(self, sons):
