@@ -31,8 +31,5 @@ class MenuDisplay:
         self.console.clear()
         self.console.print(panel)
 
-    def displayLogin(self):
-        pass
-
-    def displayRegister(self):
+    def displayLoginRegister(self):
         pass
