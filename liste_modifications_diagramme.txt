@@ -25,3 +25,26 @@ class Spell:
 
 ---------------------------------------------------------------
 
+
+class NPC:
+
+npc detient un inventaire à lui (pas seulement un Item)
+
+------------------------------------------------------------------
+
+
+class Quest:   et (Reward)
+
+dans fichier xml de quest
+points d experience ne sont pas contenu dans dans recompenses
+-> recompense: quantité de gold
+
+
+
+
+-------------------------------------------------------
+
+class Reward:
+
+enlever l'exp (le mettre dans Quest)
+
