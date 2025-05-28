@@ -53,44 +53,52 @@ class MenuController:
             if key == keys.ESCAPE:
                 if pwTurn == True:
                     pwTurn = False
+                    password = []
                 else:
                     self.menu = self.previousMenu.pop()
                     self.currentIndex = 0
                     return
-            if key == keys.DELETE:
-                if pwTurn:
+            if key == keys.BACKSPACE:
+                if pwTurn and password:
                     password.pop()
-                else:
+                if not pwTurn and username:
                     username.pop()
             if key == keys.ENTER:
-                if pwTurn == False:
-                    pwTurn == True
-                else:
-                    if login:
-                        if self.database.execute_query("login_player", [username.join(), password.join()]):
-                            self.previousMenu.append(self.menu)
-                            self.menu = self.menu.getSons()[self.currentIndex]
-                            self.currentIndex = 0
-                            self.username = username.join()
-                        else:
-                            message = "Incorrect Username or Password"
-                            username = []
-                            password = []
-                            pwTurn = False
-                    else:
-                        if self.database.execute_query("add_player", [username.join(), password.join()]):
-                            self.previousMenu.append(self.menu)
-                            self.menu = self.menu.getSons()[self.currentIndex]
-                            self.currentIndex = 0
-                            self.username = username.join()
-                        else:
-                            message = "Username Already Used"
-                            username = []
-                            password = []
-                            pwTurn = False
-            else:
                 if not pwTurn:
-                    if username < 30:
+                    if len(username) > 5:
+                        pwTurn = True
+                    else:
+                        message = "Minimum 5 Characters"
+                else:
+                    if len(password)>5:
+                        if login:
+                            if self.database.execute_query("login_player", [''.join(username), ''.join(password)]):
+                                self.previousMenu.append(self.menu)
+                                self.menu = self.menu.getSons()[self.currentIndex]
+                                self.currentIndex = 0
+                                self.username = ''.join(username)
+                            else:
+                                message = "Incorrect Username or Password"
+                                username = []
+                                password = []
+                                pwTurn = False
+                        else:
+                            if self.database.execute_query("add_player", [''.join(username), ''.join(password)]):
+                                self.previousMenu.append(self.menu)
+                                self.menu = self.menu.getSons()[self.currentIndex]
+                                self.currentIndex = 0
+                                self.username = ''.join(username)
+                            else:
+                                message = "Username Already In Use"
+                                username = []
+                                password = []
+                                pwTurn = False
+                    else:
+                        message = "Minimum 5 Characters"
+
+            if isinstance(key, str) and key.isalpha():
+                if not pwTurn:
+                    if len(username) < 30:
                         username.append(str(key))
                     else:
                         message = "Maximum Length Reached"
