@@ -25,3 +25,12 @@ CREATE TABLE IF NOT EXISTS Spell (
     LoadingTime INT DEFAULT 0,
     AttackPower INT DEFAULT 0,
 );
+
+CREATE TABLE IF NOT EXISTS PlayerSpell (
+    SpellID     INT NOT NULL,
+    PlayerID    INT NOT NULL,
+
+    PRIMARY KEY (SpellID, PlayerID),
+    FOREIGN KEY (SpellID)   REFERENCES Spell(SpellID),
+    FOREIGN KEY (PlayerID)  REFERENCES Player(PlayerID)
+);
