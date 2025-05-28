@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS Characters (
     Strength        INT DEFAULT 0,
     Intelligence    INT DEFAULT 0,
     Agility         INT DEFAULT 0,
+    Gold            INT DEFAULT 0,
     userName        VARCHAR(25) NOT NULL,
 
     FOREIGN KEY (PlayerID)  REFERENCES Player(PlayerID),
