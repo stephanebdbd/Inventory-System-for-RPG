@@ -1,14 +1,14 @@
 DROP TABLE IF EXISTS
+    PlayerSpell,
+    NPCQuest,
     ItemsDropped,
     MonsterLoot,
     Battle,
     Inventory,
-    NPC,
     Quests,
-    NPCQuest,
     Monster,
+    NPC,
     Player,
-    PlayerSpell,
     Characters,
     Spell,
     Item
