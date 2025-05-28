@@ -60,3 +60,6 @@ class MenuDisplay:
         prefix = "→ " if is_selected else "  "
         style = self.selected_style if is_selected else self.default_style
         return Text(f"{prefix}{text}", style=style) + Text("\n")
+    
+    def displayCharacter(self, character, stats):
+        pass
