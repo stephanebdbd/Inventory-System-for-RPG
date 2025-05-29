@@ -1,62 +1,71 @@
 --TOPGOLD
-SELECT username, montant_or
-FROM Joueur
-ORDER BY montant_or DESC
+SELECT Username, MoneyOr
+FROM Player
+ORDER BY MoneyOr DESC
 LIMIT 10;
 
 --RANK1
-SELECT j.username, p.classe, COUNT(*) AS total
-FROM Joueur j
-JOIN Personnage p ON j.id = p.joueur_id
-GROUP BY j.username, p.classe
+SELECT j.Username, p.ClassName, COUNT(*) AS total
+FROM Player j
+JOIN Characters p ON j.PlayerID = p.CharID
+GROUP BY j.Username, p.ClassName
 ORDER BY total DESC
 LIMIT 1;
 
 --TOPQUEST
-SELECT nom_quete, niveau_difficulte, or_recompense
-FROM Quete
-ORDER BY (or_recompense / niveau_difficulte) DESC
+SELECT 
+    q.QuestName, 
+    q.niveau_difficulte, 
+    r.GoldQuantity
+FROM Quests q
+JOIN Rewards r ON q.RewardID = r.RewardID
+WHERE q.niveau_difficulte > 0
+ORDER BY (r.GoldQuantity / q.niveau_difficulte) DESC
 LIMIT 1;
 
 --TOPPNJ
-SELECT p.nom, SUM(o.valeur_or) AS valeur_totale
-FROM PNJ p
-JOIN Inventaire i ON p.id = i.pnj_id
-JOIN Objet o ON i.objet_id = o.id
-GROUP BY p.nom
+SELECT 
+    npc.npcName,
+    SUM(it.Price * ii.AmountItem) AS valeur_totale
+FROM NPC npc
+JOIN NPCInventory ni ON npc.npcID = ni.npcID
+JOIN InventoryItem ii ON ni.InventoryID = ii.InventoryID
+JOIN Item it ON ii.ItemID = it.ItemID
+GROUP BY npc.npcID
 ORDER BY valeur_totale DESC
 LIMIT 1;
 
 --TOPITEM
-SELECT o.type_objet, COUNT(*) AS nombre
-FROM Recompense r
-JOIN Objet o ON r.objet_id = o.id
-JOIN Quete q ON r.quete_id = q.id
+SELECT
+    CASE
+        WHEN w.ItemID IS NOT NULL THEN 'Weapon'
+        WHEN a.ItemID IS NOT NULL THEN 'Armor'
+        WHEN p.ItemID IS NOT NULL THEN 'Potion'
+        WHEN ar.ItemID IS NOT NULL THEN 'Artefact'
+        ELSE 'Unknown'
+    END AS type_objet,
+    COUNT(*) AS nombre
+FROM Quests q
+JOIN Rewards r ON q.RewardID = r.RewardID
+JOIN ItemReward ir ON r.RewardID = ir.RewardID
+JOIN Item i ON ir.ItemID = i.ItemID
+LEFT JOIN Weapon w ON i.ItemID = w.ItemID
+LEFT JOIN Armor a ON i.ItemID = a.ItemID
+LEFT JOIN Potion p ON i.ItemID = p.ItemID
+LEFT JOIN Artefact ar ON i.ItemID = ar.ItemID
 WHERE q.niveau_difficulte = 5
-GROUP BY o.type_objet
+GROUP BY type_objet
 ORDER BY nombre DESC
 LIMIT 1;
 
 --TOPMONSTER
-SELECT m.nom, SUM(o.valeur_or) AS total_or, m.vie
-FROM Monstre m
-JOIN Butin b ON m.id = b.monstre_id
-JOIN Objet o ON b.objet_id = o.id
-GROUP BY m.nom, m.vie
-ORDER BY total_or DESC;
-
---add_player
-SELECT m.nom, SUM(o.valeur_or) AS total_or, m.vie
-FROM Monstre m
-JOIN Butin b ON m.id = b.monstre_id
-JOIN Objet o ON b.objet_id = o.id
-GROUP BY m.nom, m.vie
-ORDER BY total_or DESC;
-
---login_player
-SELECT m.nom, SUM(o.valeur_or) AS total_or, m.vie
-FROM Monstre m
-JOIN Butin b ON m.id = b.monstre_id
-JOIN Objet o ON b.objet_id = o.id
-GROUP BY m.nom, m.vie
-ORDER BY total_or DESC;
+SELECT 
+    m.MonsterName, 
+    m.LifePoints, 
+    SUM(i.Price * id.AmountItem) AS total_loot_value
+FROM Monster m
+JOIN MonsterLoot ml ON m.MonsterID = ml.MonsterID
+JOIN ItemsDropped id ON ml.LootID = id.LootID
+JOIN Item i ON id.ItemID = i.ItemID
+GROUP BY m.MonsterID
+ORDER BY total_loot_value DESC;

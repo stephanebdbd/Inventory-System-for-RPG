@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS Spell (
+    SpellID     INT PRIMARY KEY AUTO_INCREMENT,
+    SpellName   VARCHAR(25) NOT NULL,
+    ManaCost    INT DEFAULT 0,
+    LoadingTime INT DEFAULT 0,
+    AttackPower INT DEFAULT 0
+);
+

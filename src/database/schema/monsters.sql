@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS Monster (
     MonsterID   INT PRIMARY KEY NOT NULL,
     MonsterName VARCHAR(100) NOT NULL,
     Attack      INT DEFAULT 10,
-    Defense     INT DEFAULT 10
+    Defense     INT DEFAULT 10,
     LifePoints  INT DEFAULT 100
 );
 
