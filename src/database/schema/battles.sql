@@ -1,13 +1,17 @@
+DROP TABLE IF EXISTS Battle;
+
 CREATE TABLE IF NOT EXISTS Battle (
-    BattleID INT PRIMARY KEY AUTO_INCREMENT UNIQUE,
+  BattleID INT PRIMARY KEY AUTO_INCREMENT,
+  BattleName VARCHAR(50)
 );
+
 
 CREATE TABLE IF NOT EXISTS PlayersBattle(
     PlayerID    INT NOT NULL,
     BattleID    INT NOT NULL,
     PRIMARY KEY (PlayerID, BattleID),
     FOREIGN KEY (BattleID) REFERENCES Battle(BattleID),
-    FOREIGN KEY (PlayerID) REFERENCES Player(PlayerID),
+    FOREIGN KEY (PlayerID) REFERENCES Player(PlayerID)
 );
 
 CREATE TABLE IF NOT EXISTS MonstersBattle (
@@ -15,5 +19,5 @@ CREATE TABLE IF NOT EXISTS MonstersBattle (
     BattleID INT NOT NULL,
     PRIMARY KEY (MonsterID, BattleID),
     FOREIGN KEY (BattleID)  REFERENCES Battle(BattleID),
-    FOREIGN KEY (MonsterID) REFERENCES Monster(MonsterID),
+    FOREIGN KEY (MonsterID) REFERENCES Monster(MonsterID)
 );

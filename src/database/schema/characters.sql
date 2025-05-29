@@ -10,22 +10,19 @@ CREATE TABLE IF NOT EXISTS Characters (
     Agility         INT DEFAULT 0,
     Gold            INT DEFAULT 0,
     userName        VARCHAR(25) NOT NULL,
-
     FOREIGN KEY (PlayerID)  REFERENCES Player(PlayerID),
-    FOREIGN KEY (ClassName) REFERENCES Class(Name),
+    FOREIGN KEY (ClassName) REFERENCES Class(ClassName)
 );
 
-CREATE TABLE IF NOT EXISTS Class (
-    Name        VARCHAR(50) NOT NULL,
-);
 
 CREATE TABLE IF NOT EXISTS Spell (
-    SpellID     INT NOT NULL,
-    SpellName   VARCHAR(25) PRIMARY KEY NOT NULL,
+    SpellID     INT PRIMARY KEY AUTO_INCREMENT,
+    SpellName   VARCHAR(25) NOT NULL,
     ManaCost    INT DEFAULT 0,
     LoadingTime INT DEFAULT 0,
-    AttackPower INT DEFAULT 0,
+    AttackPower INT DEFAULT 0
 );
+
 
 CREATE TABLE IF NOT EXISTS PlayerSpell (
     SpellID     INT NOT NULL,
