@@ -12,6 +12,7 @@ class MenuDisplay:
         self.panel_style = Style(color="magenta", bold=True)
         self.error_style = Style(color="red", bold=True)
 
+
     def displayMenu(self, currentMenu, selectedIndex):
         menu_title = currentMenu.getTitle()
         menu_items = [son.getTitle() for son in currentMenu.getSons()]
@@ -61,6 +62,7 @@ class MenuDisplay:
         style = self.selected_style if is_selected else self.default_style
         return Text(f"{prefix}{text}", style=style) + Text("\n")
     
+
     def displayCharacterCreation(self, character_name: str, stats: dict, selected_index: int, points_left: int, message: str = None):
         body = []
         
@@ -97,31 +99,6 @@ class MenuDisplay:
         self.console.clear()
         self.console.print(panel.center())
 
-    def displayCharacterList(self, characters: list, selected_index: int):
-        body = []
-        
-        if not characters:
-            body.append("[italic]No characters found[/italic]")
-        else:
-            for idx, char in enumerate(characters):
-                prefix = "→ " if idx == selected_index else "  "
-                body.append(f"{prefix}{char['name']} (Level {char['level']})")
-        
-        body.extend([
-            "",
-            "[ENTER] Select character",
-            "[ESC] Return to menu"
-        ])
-        
-        panel = Panel(
-            "\n".join(body),
-            title="[bold yellow]Your Characters[/bold yellow]",
-            border_style="magenta",
-            width=50,
-            padding=(1, 4))
-        
-        self.console.clear()
-        self.console.print(panel.center())
 
     def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int):
         body = [
@@ -153,3 +130,157 @@ class MenuDisplay:
         
         self.console.clear()
         self.console.print(panel.center())
+
+
+    
+    def displayMyCharactersList(self, characters, index):
+        characters_to_show = []
+        for i, char in enumerate(characters):
+            name = char.get("Name", f"Character {i}")
+            if i == index:
+                style = self.selected_style 
+                chara_pointer  = "→ "
+            else:
+                style = self.default_style
+                chara_pointer = "  "
+            
+            characters_to_show.append(Text(f"{chara_pointer}{name}", style=style))
+
+        panel_title="[bold yellow]Select a Character to see his Inventory [/bold yellow]"
+        self.displayPanel(panel_title, characters_to_show, 60, self.panel_style )
+
+
+    def displayCharacterInventory(self, character, items, index):
+        char_name = character.get("Name")
+        lines = []
+
+        for i, item in enumerate(items):
+            name = item.get("Name")
+
+        # les chhamps spécifiques
+            if "AttackPower" in item:
+                item_type = f"(Attack: {item.get('AttackPower')})"
+            elif "Defense" in item:
+                item_type = f"(Defense: {item.get('Defense')})"
+            elif "Healing" in item:
+                item_type = f"(Healing: {item.get('Healing')})"
+            elif "Effect" in item:
+                item_type = f"(Effect: {item.get('Effect')})"
+            
+            if i == index:
+                style = self.selected_style
+                item_pointer = "→ " 
+            else:
+                style = self.default_style
+                item_pointer = " "
+            
+            lines.append(Text(f"{item_pointer}{name} - {item_type}", style=style))
+
+        panel_title=f"[bold cyan]Inventory of {char_name}[/bold cyan]"
+        self.displayPanel(panel_title, lines, 60, self.panel_style)
+
+
+
+
+    def displayQuestList(self, quests, index):
+        quest_lines = []  
+
+        for i, quest in enumerate(quests):
+            quest_name = quest.get("QuestName", "Quest unknown")   # dans le cas où on sait pas recupérer le name de la quest --> affiche quest unknown
+            
+            if i == index:
+                style = self.selected_style
+                quest_pointer = "-> "
+            else:
+                style = self.default_style
+                quest_pointer = " "
+
+            quest_lines.append(Text(f"{quest_pointer}{quest_name}", style=style) +Text("\n"))
+
+        panel_title="[bold yellow] Quests List [/bold yellow]"
+        self.displayPanel(panel_title, quest_lines, 60, self.panel_style)
+        
+
+    def displayQuestInfo(self, quest):
+        name = quest.get("QuestName")
+        description = quest.get("Description", "No description.")  #no description si y a pas de description
+        experience = quest.get("Experience")
+        gold = quest.get("Gold", 0)
+        difficulty = quest.get("Difficulty")
+        reward = quest.get("Item", None)
+
+        #lignes à afficher
+        lines = [ 
+        Text(f"Name : {name}", style="bold cyan"),
+        Text(f"Difficulty : {difficulty}", style="bold cyan"),
+        Text(f"Experience : {experience}", style="bold cyan"),
+        Text(f"Gold : {gold}", style="bold cyan"),
+        ]
+
+        lines.append(Text("\nDescription :", style="bold cyan"))
+        lines.append(Text(description, style="cyan"))
+
+        panel_title="[bold yellow] Quest information [/bold yellow]"
+        self.displayPanel(panel_title, lines, 80, self.panel_style)
+
+
+    
+    def  displayAllMonsters(self, monsters, index):
+        lines = []
+
+        for i, monster in enumerate(monsters):
+            monster_name = monster.get("MonsterName")
+
+            if i == index:
+                style = self.selected_style
+                monster_pointer = "→ "
+            else:
+                style = self.default_style
+                monster_pointer = " "
+            
+            lines.append(Text(f"{monster_pointer}{monster_name}", style=style) +Text("\n"))
+
+        panel_title = "[bold red]Monsters[/bold red]"
+        self.displayPanel(panel_title, lines, 60, "bright_magenta") 
+
+
+    
+    def displayMonsterInfo(self, monster, loots):
+        lines = []
+
+        lines.append(Text(f"Name: {monster.get('MonsterName')}", style="bold"))
+        lines.append(Text(f"Attack: {monster.get('Attack')}"))
+        lines.append(Text(f"Defense: {monster.get('Defense')}"))
+        lines.append(Text(f"Life Points: {monster.get('LifePoints')}\n"))
+
+        if loots:
+            lines.append(Text("Loots:", style="bold underline"))
+            for loot in loots:
+                if "ItemID" in loot:  #si c est un item (via item id)    
+                    lines.append(Text(f" {loot['ItemID']} x{loot.get('AmountItem',1)} ({loot.get('Probability')}%)"))
+                
+                elif "GoldQuantity" in loot: # si c'est de l'or
+                    lines.append(Text(f" Gold: {loot['GoldQuantity']} ({loot.get('GoldProbability')}%)"))
+        else:
+            lines.append(Text("No loot info available."))
+
+        panel_title = "[bold red]Monster Details[/bold red]"
+        self.displayPanel(panel_title, lines, 60, "bright_magenta")
+
+
+
+    def displayPanel(self, title: str, lines: list, width, border_color: str = "bright_magenta",):
+        """
+        Affiche un panel générique avec un titre, 
+        une liste de lignes et un style.
+        """
+        panel = Panel(
+            Text.assemble(*[line + Text("\n") for line in lines]),
+            title=title,
+            border_style=border_color,
+            width=width,
+            padding=(1, 4),
+        )
+        self.console.clear()
+        self.console.print(panel)
+

@@ -233,3 +233,96 @@ class MenuController:
                 if stats != original_stats:
                     self.view.showMessage("Discarding unsaved changes")
                 return
+            
+    
+    
+    def handleCharacterInventory(self):
+        """
+        voir la liste de ses characters (d'un joueur)
+        et acceder à l'inventory de un de ses characters
+        """
+        characters = self.database.execute_query("get_characters", [self.username])
+        index = 0
+
+        while True:
+            self.view.displayMyCharactersList(characters, index)
+            key = getkey()
+
+            if key == keys.UP:
+                index = max(0, index - 1)
+
+            elif key == keys.DOWN:
+                index = min(len(characters) - 1, index + 1)
+            
+            elif key == keys.ENTER:
+                char_selected = characters[index]
+                inventory = self.database.execute_query("get_character_inventory",[char_selected["CharID"]] )
+                self.view.displayCharacterInventory(char_selected, inventory, index)
+
+            elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
+                return  
+
+
+
+    def handleMonster(self):
+        """
+        voir l'ensemble des monstres du jeu
+        et en clickant sur l'un, voir ses infos
+        """
+
+        monsters = self.database.execute_query("get_monsters", [])
+        index = 0
+        
+        while True:
+            self.view.displayAllMonsters(monsters, index)
+            key = getkey()
+
+            if key == keys.UP:
+                index = max(0, index - 1)
+            elif key == keys.DOWN:
+                index = min(len(monsters) - 1, index + 1)
+            elif key == keys.ENTER:
+                monster_selected = monsters[index]
+                monster_id = monster_selected.get("MonsterID")
+                monster_loots = self.database.execute_query("get_monster_loot", [monster_id])
+                self.view.displayMonsterInfo(monster_selected, monster_loots)
+
+            elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
+                return
+
+
+
+    def handleQuestFromNpc(self, npcId):
+        """
+        voir les quetes proposées par un npc
+        et quand on click sur une quete, voir les 
+        infos de la quete
+        """
+        quests =  self.database.execute_query("get_quests_by_npc", [npcId])  
+        index = 0
+
+        while True:
+            self.view.displayQuestListNpc(quests, index)
+            key = getkey()
+
+            if key == keys.DOWN:
+                max_index = len(quests) - 1
+                index = min(max_index, index + 1)
+
+            elif key == keys.UP:
+                index = max(0, index-1)
+
+            elif key == keys.ENTER:
+                quest_chosen = quests[index]
+                self.view.displayQuestInfo(quest_chosen)  #  montrer les infos d'une quete lorsqu'on click dessus
+
+            elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.index_cuurent = 0
+                return
+
+
