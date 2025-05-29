@@ -69,3 +69,24 @@ JOIN ItemsDropped id ON ml.LootID = id.LootID
 JOIN Item i ON id.ItemID = i.ItemID
 GROUP BY m.MonsterID
 ORDER BY total_loot_value DESC;
+
+--add_player
+
+--login_player
+
+--get_characters
+
+--add_character
+
+--edit_character
+
+--get_stats
+
+--get_all_items
+
+--get_inventory
+
+--get_monsters
+
+--get_quests
+

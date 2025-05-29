@@ -10,7 +10,7 @@ class MenuController:
         self.username = ""
         self.currentIndex = 0
         suite = Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
-                               Menu("Items And Inventory", None), Menu("Monsters And Loop", None), Menu("Quests", None)])
+                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None)])
         
         self.menu = Menu("Welcome", [Menu("Register", [suite]), Menu("Login", [suite])])
         self.view = MenuDisplay()
