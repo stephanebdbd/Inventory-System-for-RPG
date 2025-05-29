@@ -44,3 +44,19 @@ JOIN Butin b ON m.id = b.monstre_id
 JOIN Objet o ON b.objet_id = o.id
 GROUP BY m.nom, m.vie
 ORDER BY total_or DESC;
+
+--add_player
+SELECT m.nom, SUM(o.valeur_or) AS total_or, m.vie
+FROM Monstre m
+JOIN Butin b ON m.id = b.monstre_id
+JOIN Objet o ON b.objet_id = o.id
+GROUP BY m.nom, m.vie
+ORDER BY total_or DESC;
+
+--login_player
+SELECT m.nom, SUM(o.valeur_or) AS total_or, m.vie
+FROM Monstre m
+JOIN Butin b ON m.id = b.monstre_id
+JOIN Objet o ON b.objet_id = o.id
+GROUP BY m.nom, m.vie
+ORDER BY total_or DESC;

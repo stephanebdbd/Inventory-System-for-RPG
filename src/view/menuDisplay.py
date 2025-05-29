@@ -61,5 +61,95 @@ class MenuDisplay:
         style = self.selected_style if is_selected else self.default_style
         return Text(f"{prefix}{text}", style=style) + Text("\n")
     
-    def displayCharacter(self, character, stats):
-        pass
+    def displayCharacterCreation(self, character_name: str, stats: dict, selected_index: int, points_left: int, message: str = None):
+        body = []
+        
+        name_line = f"Character Name: {character_name if character_name else '[Unnamed]'}"
+        body.append(name_line)
+        body.append("")
+        
+        body.append(f"[bold]Points left:[/bold] {points_left}")
+        body.append("")
+        
+        stat_names = list(stats.keys())
+        for idx, stat in enumerate(stat_names):
+            prefix = "→ " if idx == selected_index else "  "
+            body.append(f"{prefix}{stat}: {stats[stat]}")
+        
+        body.extend([
+            "",
+            "[←/→] Adjust stat",
+            "[s] Save character",
+            "[ESC] Cancel"
+        ])
+        
+        if message:
+            body.append(f"\n[red]{message}[/red]")
+        
+        panel = Panel(
+            "\n".join(body),
+            title="[bold yellow]Character Creation[/bold yellow]",
+            border_style="magenta",
+            width=50,
+            padding=(1, 4)
+        )
+        
+        self.console.clear()
+        self.console.print(panel.center())
+
+    def displayCharacterList(self, characters: list, selected_index: int):
+        body = []
+        
+        if not characters:
+            body.append("[italic]No characters found[/italic]")
+        else:
+            for idx, char in enumerate(characters):
+                prefix = "→ " if idx == selected_index else "  "
+                body.append(f"{prefix}{char['name']} (Level {char['level']})")
+        
+        body.extend([
+            "",
+            "[ENTER] Select character",
+            "[ESC] Return to menu"
+        ])
+        
+        panel = Panel(
+            "\n".join(body),
+            title="[bold yellow]Your Characters[/bold yellow]",
+            border_style="magenta",
+            width=50,
+            padding=(1, 4))
+        
+        self.console.clear()
+        self.console.print(panel.center())
+
+    def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int):
+        body = [
+            f"Name: {character['name']}",
+            f"Class: {character['class']}",
+            f"Level: {character['level']}",
+            f"XP: {character['xp']}/{character['next_level_xp']}",
+            ""
+        ]
+        
+        stat_names = list(stats.keys())
+        for idx, stat in enumerate(stat_names):
+            prefix = "→ " if idx == selected_index else "  "
+            body.append(f"{prefix}{stat}: {stats[stat]}")
+        
+        body.extend([
+            "",
+            "[←/→] Adjust stat",
+            "[s] Save changes",
+            "[ESC] Return to list"
+        ])
+        
+        panel = Panel(
+            "\n".join(body),
+            title="[bold yellow]Character Management[/bold yellow]",
+            border_style="magenta",
+            width=50,
+            padding=(1, 4))
+        
+        self.console.clear()
+        self.console.print(panel.center())

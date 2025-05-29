@@ -6,12 +6,12 @@ config = {
     "user": "pietro",
     "password": "yildizmygoat",
     "database": "rpgg",
-    "port": 3306
 }
 
 def main():
     db = Database(config["host"], config["user"], config["password"], config["database"])
     db.connect()
+    db.parseQueries("database/schema/queries.sql")
     menu = MenuController(db)
     menu.launchView()
     db.disconnect()

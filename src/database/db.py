@@ -34,22 +34,23 @@ class Database:
             print("Connexion fermée.")
     
     def parseQueries(self, path):
-        """Parse les queries et les fait correcspondre a une clef dans un dictionnaire"""
         with open(path, 'r', encoding='utf-8') as f:
             key = None
             query = []
             for line in f:
                 stripped = line.strip()
-
                 if not stripped:
                     continue
-                elif line.startswith("--"):
+                if line.startswith("--"):
                     if key and query:
                         self.queries[key] = ' '.join(query)
                         query = []
                     key = line.lstrip('-').strip()
                 else:
-                    query.append(stripped)
+                    if key is not None:
+                        query.append(stripped)
+            if key and query:
+                self.queries[key] = ' '.join(query)
 
     def execute_query(self, queryKey, params=None):
         """Exécute une requête SQL générique."""
