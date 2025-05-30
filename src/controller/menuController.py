@@ -75,7 +75,7 @@ class MenuController:
                 else:
                     if len(password)>=5:
                         if login:
-                            if self.database.execute_query("login_player", [''.join(username), ''.join(password)]):
+                            if self.database.execute_query("login_player", (''.join(username), ''.join(password))):
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
@@ -86,7 +86,7 @@ class MenuController:
                                 password = []
                                 pwTurn = False
                         else:
-                            if self.database.execute_query("add_player", [''.join(username), ''.join(password)]):
+                            if self.database.execute_query("add_player", (''.join(username), ''.join(password))):
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
@@ -178,7 +178,7 @@ class MenuController:
                 return False
 
     def handleManageCharacters(self):
-        characters = self.database.execute_query("get_characters", [self.username])
+        characters = self.database.execute_query("get_characters", (self.username, ))
         if not characters:
             self.view.showMessage("No characters found!")
             return
@@ -199,7 +199,7 @@ class MenuController:
             elif key == keys.ESCAPE:
                 return
         
-        stats = self.database.execute_query("get_stats", [selected_character['id']])
+        stats = self.database.execute_query("get_stats", (selected_character['id'], ))
         if not stats:
             self.view.showMessage("Failed to load character stats")
             return
@@ -241,7 +241,7 @@ class MenuController:
         voir la liste de ses characters (d'un joueur)
         et acceder à l'inventory de un de ses characters
         """
-        characters = self.database.execute_query("get_characters", [self.username])
+        characters = self.database.execute_query("get_characters", (self.username, ))
         index = 0
 
         while True:
@@ -256,7 +256,7 @@ class MenuController:
             
             elif key == keys.ENTER:
                 char_selected = characters[index]
-                inventory = self.database.execute_query("get_character_inventory",[char_selected["CharID"]] )
+                inventory = self.database.execute_query("get_character_inventory",(char_selected["CharID"], ))
                 self.view.displayCharacterInventory(char_selected, inventory, index)
 
             elif key == keys.ESCAPE:
@@ -272,7 +272,7 @@ class MenuController:
         et en clickant sur l'un, voir ses infos
         """
 
-        monsters = self.database.execute_query("get_monsters", [])
+        monsters = self.database.execute_query("get_monsters")
         index = 0
         
         while True:
@@ -286,7 +286,7 @@ class MenuController:
             elif key == keys.ENTER:
                 monster_selected = monsters[index]
                 monster_id = monster_selected.get("MonsterID")
-                monster_loots = self.database.execute_query("get_monster_loot", [monster_id])
+                monster_loots = self.database.execute_query("get_monster_loot", (monster_id, ))
                 self.view.displayMonsterInfo(monster_selected, monster_loots)
 
             elif key == keys.ESCAPE:
@@ -302,7 +302,7 @@ class MenuController:
         et quand on click sur une quete, voir les 
         infos de la quete
         """
-        quests =  self.database.execute_query("get_quests", [])  
+        quests =  self.database.execute_query("get_quests")  
         index = 0
 
         while True:

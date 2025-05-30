@@ -25,6 +25,7 @@ class Database:
             print("Connexion à MySQL réussie !")
         except Error as e:
             print(f"Erreur de connexion : {e}")
+            raise
 
     def disconnect(self):
         """Ferme la connexion."""
@@ -54,11 +55,13 @@ class Database:
 
     def execute_query(self, queryKey, params=None):
         """Exécute une requête SQL générique."""
-        query  = self.queries[queryKey]
+        query = self.queries[queryKey]
+        print(query)
         try:
             self.cursor.execute(query, params or ())
             self.connection.commit()
-            return self.cursor
+            result = self.cursor.fetchall()
+            return result
         except Error as e:
             print(f"Erreur lors de l'exécution de la requête : {e}")
             self.connection.rollback()

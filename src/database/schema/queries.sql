@@ -71,8 +71,13 @@ GROUP BY m.MonsterID
 ORDER BY total_loot_value DESC;
 
 --add_player
+INSERT INTO Player (Username, Password) 
+VALUES (%s, %s);
 
 --login_player
+SELECT PlayerID, Username, Level, Experience, MoneyGold 
+FROM Player 
+WHERE Username = %s AND Password = %s;
 
 --get_characters
 
