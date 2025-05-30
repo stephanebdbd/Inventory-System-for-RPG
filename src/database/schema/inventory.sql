@@ -5,14 +5,14 @@ CREATE TABLE IF NOT EXISTS Inventory (
     InventoryID INT PRIMARY KEY AUTO_INCREMENT
 );
 
-CREATE TABLE IF NOT EXISTS CharacterInventory (
+CREATE TABLE IF NOT EXISTS CharactersInventory (
     InventoryID INT NOT NULL,
     CharID      INT NOT NULL,
     AmountSlots INT NOT NULL    DEFAULT 0,
 
     PRIMARY KEY (CharID, InventoryID),
     FOREIGN KEY (InventoryID)   REFERENCES Inventory(InventoryID),
-    FOREIGN KEY (CharID)        REFERENCES Character(CharID)
+    FOREIGN KEY (CharID)        REFERENCES Characters(CharID)
 );
 
 CREATE TABLE IF NOT EXISTS NPCInventory (

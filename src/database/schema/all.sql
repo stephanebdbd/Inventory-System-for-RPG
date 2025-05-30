@@ -1,0 +1,31 @@
+USE rpgg;
+
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS InventoryItem;
+DROP TABLE IF EXISTS Inventory;
+DROP TABLE IF EXISTS Battles;
+DROP TABLE IF EXISTS Characters;
+DROP TABLE IF EXISTS Player;
+DROP TABLE IF EXISTS Quest;
+DROP TABLE IF EXISTS Reward;
+DROP TABLE IF EXISTS ItemDropped;
+DROP TABLE IF EXISTS ItemReward;
+DROP TABLE IF EXISTS Item;
+DROP TABLE IF EXISTS MonsterLoot;
+DROP TABLE IF EXISTS Monster;
+DROP TABLE IF EXISTS NPCInventory;
+DROP TABLE IF EXISTS NPC;
+DROP TABLE IF EXISTS Spell;
+SET FOREIGN_KEY_CHECKS = 1;
+
+SOURCE players.sql;
+SOURCE class.sql;
+SOURCE npcs.sql;
+SOURCE items.sql;
+SOURCE rewards.sql;
+SOURCE monsters.sql;
+SOURCE spells.sql;
+SOURCE quests.sql;
+SOURCE battles.sql;
+SOURCE characters.sql;
+SOURCE inventory.sql;

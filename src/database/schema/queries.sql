@@ -7,7 +7,7 @@ LIMIT 10;
 --RANK1
 SELECT j.Username, p.Class, COUNT(*) AS total
 FROM Player j
-JOIN Character p ON j.Username = p.Username
+JOIN Characters p ON j.Username = p.Username
 GROUP BY j.Username, p.Class
 ORDER BY total DESC
 LIMIT 1;

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Character (
+CREATE TABLE IF NOT EXISTS Characters (
     CharID          INT PRIMARY KEY AUTO_INCREMENT,
     Name            VARCHAR(15) NOT NULL,
     Class           VARCHAR(25) NOT NULL,
@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS CharacterSpells (
 
     PRIMARY KEY (SpellID, CharID),
     FOREIGN KEY (SpellID)   REFERENCES Spell(SpellID),
-    FOREIGN KEY (CharID)    REFERENCES Character(CharID)
+    FOREIGN KEY (CharID)    REFERENCES Characters(CharID)
 );

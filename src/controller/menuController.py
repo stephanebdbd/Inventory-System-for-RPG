@@ -75,7 +75,10 @@ class MenuController:
                 else:
                     if len(password)>=5:
                         if login:
-                            if self.database.execute_query("login_player", (''.join(username), ''.join(password))):
+                            result = self.database.execute_query("login_player", (''.join(username), ''.join(password)))
+                            if result is None:
+                                message = "Database error"
+                            elif len(result) > 0:
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
@@ -86,7 +89,10 @@ class MenuController:
                                 password = []
                                 pwTurn = False
                         else:
-                            if self.database.execute_query("add_player", (''.join(username), ''.join(password))):
+                            result = self.database.execute_query("add_player", (''.join(username), ''.join(password)))
+                            if result is None:
+                                message = "database error"
+                            elif result == 1:
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0

@@ -2,9 +2,9 @@ DROP TABLE IF EXISTS Battle;
 
 CREATE TABLE IF NOT EXISTS Battle (
     BattleID    INT PRIMARY KEY AUTO_INCREMENT,
-    QuestName   VARCHAR(50),
+    QuestID   INT,
 
-    FOREIGN KEY (QuestName) REFERENCES Quest(QuestName)
+    FOREIGN KEY (QuestID) REFERENCES Quest(QuestID)
 );
 
 
