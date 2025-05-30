@@ -84,9 +84,11 @@ ORDER BY total_loot_value DESC;
 
 --get_all_items
 
---get_inventory
+--get_character_inventory
 
 --get_monsters
+
+--get_monster_loot
 
 --get_quests
 
