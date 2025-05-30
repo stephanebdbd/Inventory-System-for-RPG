@@ -1,15 +1,15 @@
 DROP TABLE IF EXISTS
-    PlayerSpell,
+    CharacterSpells,
     NPCQuest,
-    ItemsDropped,
+    ItemDropped,
     MonsterLoot,
     Battle,
     Inventory,
-    Quests,
+    Quest,
     Monster,
     NPC,
     Player,
-    Characters,
+    Character,
     Spell,
     Item
 CASCADE;

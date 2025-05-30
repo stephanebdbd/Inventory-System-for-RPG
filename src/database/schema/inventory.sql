@@ -2,17 +2,17 @@ DROP TABLE IF EXISTS Inventory;
 
 -- parent class of inventories
 CREATE TABLE IF NOT EXISTS Inventory (
-    InventoryID INT AUTO_INCREMENT PRIMARY KEY UNIQUE
+    InventoryID INT PRIMARY KEY AUTO_INCREMENT
 );
 
 CREATE TABLE IF NOT EXISTS CharacterInventory (
     InventoryID INT NOT NULL,
     CharID      INT NOT NULL,
-    AmountSlots INT DEFAULT 0,
+    AmountSlots INT NOT NULL    DEFAULT 0,
 
     PRIMARY KEY (CharID, InventoryID),
     FOREIGN KEY (InventoryID)   REFERENCES Inventory(InventoryID),
-    FOREIGN KEY (CharID)        REFERENCES Characters(CharID)
+    FOREIGN KEY (CharID)        REFERENCES Character(CharID)
 );
 
 CREATE TABLE IF NOT EXISTS NPCInventory (

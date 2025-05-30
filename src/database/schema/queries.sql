@@ -1,26 +1,26 @@
 --TOPGOLD
-SELECT Username, MoneyOr
+SELECT Username, MoneyGold
 FROM Player
-ORDER BY MoneyOr DESC
+ORDER BY MoneyGold DESC
 LIMIT 10;
 
 --RANK1
-SELECT j.Username, p.ClassName, COUNT(*) AS total
+SELECT j.Username, p.Class, COUNT(*) AS total
 FROM Player j
-JOIN Characters p ON j.PlayerID = p.PlayerID
-GROUP BY j.Username, p.ClassName
+JOIN Character p ON j.Username = p.Username
+GROUP BY j.Username, p.Class
 ORDER BY total DESC
 LIMIT 1;
 
 --TOPQUEST
 SELECT 
     q.QuestName, 
-    q.niveau_difficulte, 
+    q.Difficulty,
     r.GoldQuantity
-FROM Quests q
-JOIN Rewards r ON q.RewardID = r.RewardID
-WHERE q.niveau_difficulte > 0
-ORDER BY (r.GoldQuantity / q.niveau_difficulte) DESC
+FROM Quest q
+JOIN Reward r ON q.RewardID = r.RewardID
+WHERE q.Difficulty > 0
+ORDER BY (r.GoldQuantity / q.Difficulty) DESC
 LIMIT 1;
 
 --TOPPNJ
@@ -45,15 +45,15 @@ SELECT
         ELSE 'Unknown'
     END AS type_objet,
     COUNT(*) AS nombre
-FROM Quests q
-JOIN Rewards r ON q.RewardID = r.RewardID
+FROM Quest q
+JOIN Reward r ON q.RewardID = r.RewardID
 JOIN ItemReward ir ON r.RewardID = ir.RewardID
 JOIN Item i ON ir.ItemID = i.ItemID
 LEFT JOIN Weapon w ON i.ItemID = w.ItemID
 LEFT JOIN Armor a ON i.ItemID = a.ItemID
 LEFT JOIN Potion p ON i.ItemID = p.ItemID
 LEFT JOIN Artefact ar ON i.ItemID = ar.ItemID
-WHERE q.niveau_difficulte = 5
+WHERE q.Difficulty = 5
 GROUP BY type_objet
 ORDER BY nombre DESC
 LIMIT 1;
@@ -65,7 +65,7 @@ SELECT
     SUM(i.Price * id.AmountItem) AS total_loot_value
 FROM Monster m
 JOIN MonsterLoot ml ON m.MonsterID = ml.MonsterID
-JOIN ItemsDropped id ON ml.LootID = id.LootID
+JOIN ItemDropped id ON ml.LootID = id.LootID
 JOIN Item i ON id.ItemID = i.ItemID
 GROUP BY m.MonsterID
 ORDER BY total_loot_value DESC;

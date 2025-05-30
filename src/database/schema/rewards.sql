@@ -1,5 +1,13 @@
-CREATE TABLE IF NOT EXISTS Rewards (
+CREATE TABLE IF NOT EXISTS Reward (
     RewardID        INT AUTO_INCREMENT PRIMARY KEY,
-    GoldQuantity    INT DEFAULT 0,
-    Experience      INT DEFAULT 0
+    GoldQuantity    INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS ItemReward (
+    ItemID      INT NOT NULL,
+    RewardID    INT NOT NULL,
+
+    PRIMARY KEY (ItemID, RewardID),
+    FOREIGN KEY (ItemID)    REFERENCES Item(ItemID),
+    FOREIGN KEY (RewardID)  REFERENCES Reward(RewardID)
 );

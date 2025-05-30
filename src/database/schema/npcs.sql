@@ -3,3 +3,13 @@ CREATE TABLE IF NOT EXISTS NPC (
     npcName     VARCHAR(100) NOT NULL,
     npcDialogue TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS NPCQuest (
+    npcID   INT NOT NULL,
+    QuestID INT NOT NULL,
+
+    PRIMARY KEY (npcID, QuestID),
+    FOREIGN KEY (npcID)     REFERENCES NPC(npcID),
+    FOREIGN KEY (QuestID)   REFERENCES Quest(QuestID)
+
+);

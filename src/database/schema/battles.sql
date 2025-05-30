@@ -1,8 +1,10 @@
 DROP TABLE IF EXISTS Battle;
 
 CREATE TABLE IF NOT EXISTS Battle (
-  BattleID INT PRIMARY KEY AUTO_INCREMENT,
-  BattleName VARCHAR(50)
+    BattleID    INT PRIMARY KEY AUTO_INCREMENT,
+    QuestName   VARCHAR(50),
+
+    FOREIGN KEY (QuestName) REFERENCES Quest(QuestName)
 );
 
 
@@ -15,8 +17,8 @@ CREATE TABLE IF NOT EXISTS PlayersBattle(
 );
 
 CREATE TABLE IF NOT EXISTS MonstersBattle (
-    MonsterID INT NOT NULL,
-    BattleID INT NOT NULL,
+    MonsterID   INT NOT NULL,
+    BattleID    INT NOT NULL,
     PRIMARY KEY (MonsterID, BattleID),
     FOREIGN KEY (BattleID)  REFERENCES Battle(BattleID),
     FOREIGN KEY (MonsterID) REFERENCES Monster(MonsterID)
