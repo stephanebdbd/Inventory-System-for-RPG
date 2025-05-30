@@ -296,13 +296,13 @@ class MenuController:
 
 
 
-    def handleQuestFromNpc(self, npcId):
+    def handleQuests(self):
         """
         voir les quetes proposées par un npc
         et quand on click sur une quete, voir les 
         infos de la quete
         """
-        quests =  self.database.execute_query("get_quests_by_npc", [npcId])  
+        quests =  self.database.execute_query("get_quests", [])  
         index = 0
 
         while True:
