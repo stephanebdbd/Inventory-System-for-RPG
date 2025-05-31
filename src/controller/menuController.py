@@ -9,16 +9,24 @@ class MenuController:
         self.database = db
         self.username = ""
         self.currentIndex = 0
-        suite = Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
-                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None)])
+        suite = [Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
+                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None)])]
         
-        self.menu = Menu("Welcome", [Menu("Register", [suite]), Menu("Login", [suite])])
+        self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
         self.previousMenu = []
 
     def displayRightMenu(self):
         if self.menu.getTitle() == "Register" or self.menu.getTitle() == "Login":
             self.handleRegisterLogin()
+        if self.menu.getTitle() == "Create A Character" or self.menu.getTitle() == "Manage My Characters":
+            self.handleCharacters()
+        if self.menu.getTitle() == "Quests":
+            self.handleQuests()
+        if self.menu.getTitle() == "Items And Inventory" :
+            self.handleCharacterInventory()
+        if self.menu.getTitle() == "Monsters And Loot":
+            self.handleMonster()
         self.view.displayMenu(self.menu, self.currentIndex)
 
     def launchView(self):

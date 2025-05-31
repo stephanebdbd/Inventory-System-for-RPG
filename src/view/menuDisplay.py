@@ -97,7 +97,7 @@ class MenuDisplay:
         )
         
         self.console.clear()
-        self.console.print(panel.center())
+        self.console.print(panel)
 
 
     def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int):
@@ -129,7 +129,7 @@ class MenuDisplay:
             padding=(1, 4))
         
         self.console.clear()
-        self.console.print(panel.center())
+        self.console.print(panel)
 
 
     
