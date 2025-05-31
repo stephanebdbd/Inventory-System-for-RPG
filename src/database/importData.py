@@ -333,7 +333,7 @@ def importJSON(file_path: str, db: Database):
                     try:
                         db.execute_query(
                             "add_character",
-                            (username, name, cls, life, mana, strength, intel, agility)
+                            (name, cls, life, mana, strength, intel, agility, username)
                         )
                     except Exception as e:
                         print(f"Erreur lors de l'insertion du personnage '{name}': {e}")

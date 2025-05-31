@@ -137,10 +137,8 @@ From Characters;
 WHERE Username = %s;
 
 --add_character
-INSERT INTO Characters (Name, Class, LifePoints, Mana, Strength, Intelligence, Agility, PlayerID)
+INSERT INTO Characters (Name, Class, LifePoints, Mana, Strength, Intelligence, Agility, Username)
 VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-
-
 
 --edit_character
 UPDATE Characters

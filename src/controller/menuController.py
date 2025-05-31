@@ -98,7 +98,7 @@ class MenuController:
                                 password = []
                                 pwTurn = False
                         else:
-                            result = self.database.execute_query("add_player", (''.join(username), ''.join(password)))
+                            result = self.database.execute_query("register_player", (''.join(username), ''.join(password)))
                             if result is None:
                                 message = "database error"
                             elif result == 1:
