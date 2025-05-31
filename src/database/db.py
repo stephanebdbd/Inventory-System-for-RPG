@@ -61,6 +61,7 @@ class Database:
             if query.strip().startswith("SELECT"):
                 return self.cursor.fetchall()
             else:
+                self.connection.commit()
                 return self.cursor.rowcount
         except Error as e:
             print(f"Erreur lors de l'exécution de la requête : {e}")

@@ -1,9 +1,16 @@
 USE rpgg;
 
 SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS CharacterSpells;
+DROP TABLE IF EXISTS CharactersInventory;
+DROP TABLE IF EXISTS PlayersBattle;
+DROP TABLE IF EXISTS MonstersBattle;
+DROP TABLE IF EXISTS NPCQuest;
+
 DROP TABLE IF EXISTS InventoryItem;
 DROP TABLE IF EXISTS Inventory;
-DROP TABLE IF EXISTS Battles;
+DROP TABLE IF EXISTS Battle;
 DROP TABLE IF EXISTS Characters;
 DROP TABLE IF EXISTS Player;
 DROP TABLE IF EXISTS Quest;
@@ -16,16 +23,21 @@ DROP TABLE IF EXISTS Monster;
 DROP TABLE IF EXISTS NPCInventory;
 DROP TABLE IF EXISTS NPC;
 DROP TABLE IF EXISTS Spell;
+DROP TABLE IF EXISTS Class;
+DROP TABLE IF EXISTS Armor;
+DROP TABLE IF EXISTS Potion;
+DROP TABLE IF EXISTS Weapon;
 SET FOREIGN_KEY_CHECKS = 1;
+
 
 SOURCE players.sql;
 SOURCE class.sql;
-SOURCE npcs.sql;
 SOURCE items.sql;
 SOURCE rewards.sql;
 SOURCE monsters.sql;
 SOURCE spells.sql;
 SOURCE quests.sql;
+SOURCE npcs.sql;
 SOURCE battles.sql;
 SOURCE characters.sql;
 SOURCE inventory.sql;

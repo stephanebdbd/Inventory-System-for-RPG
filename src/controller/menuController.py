@@ -83,6 +83,7 @@ class MenuController:
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
                                 self.username = ''.join(username)
+                                break
                             else:
                                 message = "Incorrect Username or Password"
                                 username = []
@@ -97,6 +98,7 @@ class MenuController:
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
                                 self.username = ''.join(username)
+                                break
                             else:
                                 message = "Username Already In Use"
                                 username = []
@@ -126,12 +128,12 @@ class MenuController:
     def handleCreateCharacter(self):
         char_name = ""
         stats = {
+            "Class": "Archer",
+            "LifePoints": 10,
+            "Mana": 10,
             "Strength": 10,
-            "Dexterity": 10,
-            "Constitution": 10,
             "Intelligence": 10,
-            "Wisdom": 10,
-            "Charisma": 10
+            "Agility": 10
         }
         points_left = 15
         selected_stat = 0

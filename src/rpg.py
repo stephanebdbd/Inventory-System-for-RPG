@@ -1,10 +1,10 @@
 from controller.menuController import MenuController
 from database.db import Database
-# mysql -h 192.168.135.218 -u pietro -p rpgg
+
 config = {
-    "host": "127.0.0.1",
+    "host": "localhost",
     "user": "pietro",
-    "password": "yildizmygoat",
+    "password": "YildizMyGoat1!",
     "database": "rpgg",
 }
 

@@ -1,9 +1,10 @@
 run             -> db_script.sh
 
-connect to mysql-> mysql -h127.0.0.1 -u pietro -p
+connect to mysql-> mysql -u pietro -p rpgg
 
-write the mdp   -> yildizmygoat
+write the mdp   -> YildizMyGoat1!
 
 run in mysql    -> yourpathtotheproject/project2/src/database/schema/all.sql;
+or navigate to the schema folder then connect to mysql and just run SOURCE all.sql
 
 run in /src     -> run python3 rpgg.py 
