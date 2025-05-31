@@ -1,3 +1,5 @@
+run             -> chmod +x db_script.sh
+
 run             -> db_script.sh
 
 connect to mysql-> mysql -u pietro -p rpgg
