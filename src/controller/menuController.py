@@ -134,9 +134,11 @@ class MenuController:
             self.handleManageCharacters()
 
     def handleCreateCharacter(self):
+        classes = self.database.execute_query("get_all_classes")
+        class_names = [ row['ClassName'] for row in classes ]
         char_name = ""
         stats = {
-            "Class": "Archer",
+            "Class": class_names[0],
             "LifePoints": 10,
             "Mana": 10,
             "Strength": 10,
@@ -145,6 +147,7 @@ class MenuController:
         }
         points_left = 15
         selected_stat = 0
+        class_index = 0
         stat_names = list(stats.keys())
         message = None
         
@@ -159,14 +162,28 @@ class MenuController:
                 selected_stat = min(len(stats) - 1, selected_stat + 1)
             elif key == keys.LEFT:
                 stat_name = stat_names[selected_stat]
-                if stats[stat_name] > 8:
-                    stats[stat_name] -= 1
-                    points_left += 1
+                if stat_name == "Class":
+                    if class_index > 0:
+                        class_index -= 1
+                    else:
+                        class_index = len(class_names) - 1
+                    stats["Class"] = class_names[class_index]
+                else:
+                    if stats[stat_name] > 8:
+                        stats[stat_name] -= 1
+                        points_left += 1
             elif key == keys.RIGHT:
-                if points_left > 0:
-                    stat_name = stat_names[selected_stat]
-                    stats[stat_name] += 1
-                    points_left -= 1
+                stat_name = stat_names[selected_stat]
+                if stat_name == "Class":
+                    if class_index < len(class_names) - 1:
+                        class_index += 1
+                    else:
+                        class_index = 0
+                    stats["Class"] = class_names[class_index]
+                else:
+                    if points_left > 0:
+                        stats[stat_name] += 1
+                        points_left -= 1
             elif key == keys.ENTER:
                 # Name input
                 self.view.displayNameInput(char_name, "Enter character name")

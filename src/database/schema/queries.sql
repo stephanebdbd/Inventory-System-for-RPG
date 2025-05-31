@@ -70,7 +70,7 @@ JOIN Item i ON id.ItemID = i.ItemID
 GROUP BY m.MonsterID
 ORDER BY total_loot_value DESC;
 
---add_player
+--register_player
 INSERT INTO Player (Username, Password) 
 VALUES (%s, %s);
 
@@ -79,9 +79,63 @@ SELECT PlayerID, Username, Level, Experience, MoneyGold
 FROM Player 
 WHERE Username = %s AND Password = %s;
 
+--get_all_classes
+SELECT Name
+FROM Class
+
+--add_monster
+INSERT INTO Monster (MonsterID, MonsterName, Attack, Defense, LifePoints)
+VALUES (%s, %s, %s, %s, %s);
+
+--add_monster_drops
+INSERT INTO MonsterLoot (MonsterID, ItemID, Quantity, Probability)
+VALUES (%s, %s, %s, %s);
+
+--add_quest
+INSERT INTO Quest (Description, QuestName, Difficulty, Experience, GoldQuantity)
+VALUES (%s, %s, %s, %s, %s);
+
+--add_player
+INSERT IGNORE INTO Player (Username, Level, Experience, MoneyGold, InventorySlots)
+VALUES (%s, %s, %s, %s, %s);
+
+--add_item
+INSERT IGNORE INTO Item (Name, Type, Price)
+VALUES (%s, %s, %s);
+
+--add_weapon
+INSERT IGNORE INTO Weapon (ItemID, AttackPower, Effect)
+VALUES (%s, %s, %s);
+
+--add_armor
+INSERT IGNORE INTO Armor (ItemID, Defense, Effect)
+VALUES (%s, %s, %s);
+
+--add_potion
+INSERT IGNORE INTO Potion (ItemID, Healing, Effect)
+VALUES (%s, %s, %s);
+
+--add_artefact
+INSERT IGNORE INTO Artefact (ItemID, Effect)
+VALUES (%s, %s);
+
+--add_spell
+INSERT INTO Spell (SpellID, ManaCost, Cooldown, AttackPower)
+VALUES (%s, %s, %s, %s);
+
+--add_character
+INSERT INTO Characters (Username, Name, Class, LifePoints, Mana, Strength, Intelligence, Agility)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+
+--add_npc
+INSERT INTO NPC (NPCName, Dialogue)
+VALUES (%s, %s);
+
 --get_characters
 
 --add_character
+
+
 
 --edit_character
 
