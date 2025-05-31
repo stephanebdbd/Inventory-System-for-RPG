@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Characters (
     CharID          INT PRIMARY KEY AUTO_INCREMENT,
-    Name            VARCHAR(15) NOT NULL,
+    Name         VARCHAR(15) NOT NULL,
     Class           VARCHAR(25) NOT NULL,
     LifePoints      INT NOT NULL DEFAULT 0,
     Mana            INT NOT NULL DEFAULT 0,
@@ -8,7 +8,6 @@ CREATE TABLE IF NOT EXISTS Characters (
     Intelligence    INT NOT NULL DEFAULT 0,
     Agility         INT NOT NULL DEFAULT 0,
     Username        VARCHAR(25) NOT NULL,
-
     FOREIGN KEY (Username)  REFERENCES Player(Username),
     FOREIGN KEY (Class)     REFERENCES Class(Name)
 );

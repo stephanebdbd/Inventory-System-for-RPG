@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS MonsterLoot (
     MonsterID       INT NOT NULL,
     GoldQuantity    INT NOT NULL DEFAULT 0,
     GoldProbability INT NOT NULL DEFAULT 0,
-
     FOREIGN KEY (MonsterID) REFERENCES Monster(MonsterID)
 );
 

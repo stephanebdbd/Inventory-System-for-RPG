@@ -74,26 +74,66 @@ ORDER BY total_loot_value DESC;
 INSERT INTO Player (Username, Password) 
 VALUES (%s, %s);
 
---login_player
+--check_login_player
 SELECT PlayerID, Username, Level, Experience, MoneyGold 
 FROM Player 
 WHERE Username = %s AND Password = %s;
 
 --get_characters
+SELECT Name ,Class ,LifePoints,Mana ,Strength,Intelligence,Agility 
+From Characters;
+WHERE Username = %s;
 
 --add_character
+INSERT INTO Characters (Name, Class, LifePoints, Mana, Strength, Intelligence, Agility, PlayerID)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
 
 --edit_character
+UPDATE Characters
+SET Class = %s,
+    LifePoints = %s,
+    Mana = %s,
+    Strength = %s,
+    Intelligence = %s,
+    Agility = %s
+WHERE CharID = %s;
 
 --get_stats
-
+SELECT Class ,LifePoints,Mana, Strength,Intelligence,Agility 
+FROM Characters
+WHERE CharID = %s;
 --get_all_items
+SELECT i.Name, i.Price,
+  CASE 
+    WHEN w.ItemID IS NOT NULL THEN 'Weapon'
+    WHEN a.ItemID IS NOT NULL THEN 'Armor'
+    WHEN p.ItemID IS NOT NULL THEN 'Potion'
+    WHEN ar.ItemID IS NOT NULL THEN 'Artefact'
+    ELSE 'Other'
+  END AS ItemType
+FROM Item i
+LEFT JOIN Weapon w ON i.ItemID = w.ItemID
+LEFT JOIN Armor a ON i.ItemID = a.ItemID
+LEFT JOIN Potion p ON i.ItemID = p.ItemID
+LEFT JOIN Artefact ar ON i.ItemID = ar.ItemID;
 
 --get_character_inventory
+SELECT InventoryID 
+FROM Inventory 
+WHERE CharID = %s;
 
 --get_monsters
+SELECT MonsterName
+FROM Monster;
+
 
 --get_monster_loot
+SELECT LootID
+FROM MonsterLoot ml
+WHERE MonsterID = %s;
+
 
 --get_quests
+SELECT QuestName
+FROM Quest;
 
