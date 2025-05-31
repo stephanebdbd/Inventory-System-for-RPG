@@ -1,7 +1,7 @@
 # faut faire cette comande avant pr pouvoir exec le script             chmod +x setup.sh
 # pr linux donc windows = fucked, mais c pas bien diff en sah
 
-DB_PASSWORD="yildizmygoat"
+DB_PASSWORD="YildizMyGoat1!"
 DB_NAME="pietro"
 DB_USER="rpgg"
 
