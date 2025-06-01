@@ -10,11 +10,11 @@ class MenuController:
         self.username = ""
         self.currentIndex = 0
         self.top_queries = {
-            "Top 10 players by Gold":                        "TOPGOLD",
+            "Top 10 players by Gold": "TOPGOLD",
             "Player with most characters of the same class": "RANK1",
-            "Quest with highest Gold per Difficulty ratio":  "TOPQUEST",
+            "Quest with highest Gold per Difficulty ratio": "TOPQUEST",
             "NPC whose inventory has the highest cumulative Gold value": "TOPPNJ",
-            "Most frequently rewarded itemtype in level 5 quests":      "TOPITEM",
+            "Most frequently rewarded itemtype in level 5 quests": "TOPITEM",
             "Monsters with the best cumulative Gold loot relative to their LifePoints": "TOPMONSTER"
         }
         suite = [Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
