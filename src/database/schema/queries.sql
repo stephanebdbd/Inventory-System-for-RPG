@@ -162,6 +162,10 @@ SELECT LifePoints,Mana, Strength,Intelligence,Agility
 FROM Characters
 WHERE CharID = %s;
 
+--register_player
+INSERT INTO Player (Username, Password) 
+VALUES (%s, %s);
+
 --RANK1
 SELECT j.Username, p.Class, COUNT(*) AS total
 FROM Player j
@@ -169,10 +173,6 @@ JOIN Characters p ON j.Username = p.Username
 GROUP BY j.Username, p.Class
 ORDER BY total DESC
 LIMIT 1;
-
---register_player
-INSERT INTO Player (Username, Password) 
-VALUES (%s, %s);
 
 --TOPGOLD
 SELECT Username, MoneyGold

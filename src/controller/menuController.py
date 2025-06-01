@@ -9,8 +9,22 @@ class MenuController:
         self.database = db
         self.username = ""
         self.currentIndex = 0
+        self.top_queries = {
+            "Top 10 players by Gold":                        "TOPGOLD",
+            "Player with most characters of the same class": "RANK1",
+            "Quest with highest Gold per Difficulty ratio":  "TOPQUEST",
+            "NPC whose inventory has the highest cumulative Gold value": "TOPPNJ",
+            "Most frequently rewarded itemtype in level 5 quests":      "TOPITEM",
+            "Monsters with the best cumulative Gold loot relative to their LifePoints": "TOPMONSTER"
+        }
         suite = [Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
-                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None)])]
+                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), 
+                               Menu("Quests", None), Menu("Rankings", [Menu("Top 10 players by Gold", None),
+                                                                       Menu("Player with most characters of the same class", None),
+                                                                       Menu("Quest with highest Gold per Difficulty ratio", None),
+                                                                       Menu("NPC whose inventory has the highest cumulative Gold value", None),
+                                                                       Menu("Most frequently rewarded itemtype in level 5 quests", None),
+                                                                       Menu("Monsters with the best cumulative Gold loot relative to their LifePoints", None)]), Menu("Profile", None)])]
         
         self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
@@ -27,8 +41,10 @@ class MenuController:
             self.handleCharacterInventory()
         if self.menu.getTitle() == "Monsters And Loot":
             self.handleMonster()
+        if self.menu.getTitle() in self.top_queries.keys():
+            self.handleRankings()
         self.view.displayMenu(self.menu, self.currentIndex)
-
+        
     def launchView(self):
         while True:
             self.displayRightMenu()
@@ -356,4 +372,11 @@ class MenuController:
                 self.index_cuurent = 0
                 return
 
-
+    def handleRankings(self):
+        ranking = self.database.execute_query(self.top_queries[self.menu.getTitle()])
+        self.view.displayRanking(self.menu.getTitle(), ranking)
+        while True:
+            key = getkey()
+            if key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                return

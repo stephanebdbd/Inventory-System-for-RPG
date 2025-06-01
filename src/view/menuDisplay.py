@@ -3,6 +3,7 @@ from rich.panel import Panel
 from rich.style import Style
 from model.menu import Menu
 from rich.text import Text
+from rich.table import Table
 
 class MenuDisplay:
     def __init__(self):
@@ -28,7 +29,7 @@ class MenuDisplay:
             "\n".join(body),
             title=f"[bold yellow]{menu_title}[/bold yellow]",
             border_style=self.panel_style,
-            width=50,
+            width=70,
             padding=(1, 4))
         
         self.console.clear()
@@ -65,7 +66,6 @@ class MenuDisplay:
 
     def displayCharacterCreation(self, character_name: str, stats: dict, selected_index: int, points_left: int, message: str = None):
         body = []
-        
         
         prefix = "→ " if selected_index == 0 else "   "
         name_display = character_name if character_name else "[Unnamed]"
@@ -286,3 +286,22 @@ class MenuDisplay:
         self.console.clear()
         self.console.print(panel)
 
+
+    def displayRanking(self, ranking_title: str, rows: list[dict]):
+        """
+        Show the ranking.
+        """
+
+        self.console.clear()
+
+        columns = list(rows[0].keys())
+        table = Table(show_header=True, header_style="bold magenta")
+
+        for col in columns:
+            table.add_column(col)
+
+        for row in rows:
+            table.add_row(*(str(row[col]) for col in columns))
+
+        panel = Panel(table, title=f"[bold yellow]{ranking_title}[/bold yellow]", border_style="magenta")
+        self.console.print(panel)

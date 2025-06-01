@@ -1,7 +1,9 @@
 ## 1. Make the DB script executable
+navigate to /src
 chmod +x db_script.sh
 
 ## 2. Run the DB script
+update the mdp in the script
 ./db_script.sh
 
 ## 3. Connect to MySQL
