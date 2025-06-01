@@ -82,7 +82,7 @@ INSERT IGNORE INTO Weapon (ItemID, AttackPower, Effect)
 VALUES (%s, %s, %s);
 
 --check_login_player
-SELECT PlayerID, Username, Level, Experience, MoneyGold 
+SELECT PlayerID
 FROM Player 
 WHERE Username = %s AND Password = %s;
 

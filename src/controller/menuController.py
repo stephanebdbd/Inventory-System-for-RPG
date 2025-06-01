@@ -83,8 +83,8 @@ class MenuController:
                 else:
                     if len(password)>=5:
                         if login:
-                            result = self.database.execute_query("login_player", (''.join(username), ''.join(password)))
-                            if result and result>0:
+                            result = self.database.execute_query("check_login_player", (''.join(username), ''.join(password)))
+                            if result and len(result)>0:
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
@@ -96,20 +96,18 @@ class MenuController:
                                 password = []
                                 pwTurn = False
                         else:
-                            result = self.database.execute_query("register_player", (''.join(username), ''.join(password)))
-                            if result is None:
-                                message = "database error"
-                            elif result == 1:
+                            id = self.database.execute_query("register_player", (''.join(username), ''.join(password)))
+                            if id is None:
+                                message = "Username Already In Use"
+                                username = []
+                                password = []
+                                pwTurn = False
+                            else:
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0
                                 self.username = ''.join(username)
                                 break
-                            else:
-                                message = "Username Already In Use"
-                                username = []
-                                password = []
-                                pwTurn = False
                     else:
                         message = "Minimum 5 Characters"
 
@@ -133,7 +131,7 @@ class MenuController:
 
     def handleCreateCharacter(self):
         classes = self.database.execute_query("get_all_classes")
-        class_names = [ row['ClassName'] for row in classes ]
+        class_names = [ row['Name'] for row in classes ]
         char_name = ""
         stats = {
             "Class": class_names[0],
