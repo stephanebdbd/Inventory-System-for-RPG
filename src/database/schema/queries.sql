@@ -164,6 +164,10 @@ SELECT LootID, GoldQuantity, GoldProbability
 FROM MonsterLoot
 WHERE MonsterID = %s;
 
+--get_all_npc
+SELECT npcID, npcName, npcDialogue
+FROM NPC;
+
 --get_monster_items
 SELECT
     id.ItemID,
@@ -184,10 +188,16 @@ SELECT QuestName
 FROM Quest;
 
 --get_quests_by_npc
-SELECT q.QuestName
+SELECT q.QuestID     AS QuestID,
+       q.QuestName   AS QuestTitle,
+       q.Description AS Description,
+       q.Difficulty  AS Difficulty,
+       q.Exp         AS Exp
 FROM Quest q
 JOIN NPCQuest nq ON q.QuestID = nq.QuestID
-WHERE nq.npcID = ?; 
+JOIN NPC n       ON nq.npcID = n.npcID
+WHERE n.npcName = %s
+ORDER BY q.QuestName;
 
 
 --get_all_npc_and_quests
@@ -196,8 +206,6 @@ FROM NPC
 JOIN NPCQuest ON NPC.npcID = NPCQuest.npcID
 JOIN Quest ON NPCQuest.QuestID = Quest.QuestID
 WHERE NPC.npcName = ?;
-
-
 
 --get_stats
 SELECT LifePoints,Mana, Strength,Intelligence,Agility 
