@@ -332,7 +332,9 @@ class MenuController:
                         item_to_delete = inventory[item_index]
                         self.database.execute_query("delete_inventory_item", (item_to_delete["InventoryID"], item_to_delete["ItemID"] ))
                                
-
+                        inventory = self.database.execute_query("get_character_inventory", (char_selected["CharID"],))
+                        # Ajuste index su longueur dépassé de la liste
+                        item_index = min(item_index, len(inventory) - 1 if inventory else 0)
 
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
