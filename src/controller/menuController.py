@@ -216,7 +216,7 @@ class MenuController:
         selected_character = None
         
         while not selected_character:
-            self.view.displayCharacterList(characters, selected_index)
+            self.view.displayMyCharactersList(characters, selected_index)
             key = getkey()
             
             if key == keys.UP:
@@ -228,17 +228,19 @@ class MenuController:
             elif key == keys.ESCAPE:
                 return
         
-        stats = self.database.execute_query("get_stats", (selected_character['id'], ))
-        if not stats:
+        stats_rows = self.database.execute_query("get_stats", (selected_character['CharID'], ))
+        if not stats_rows:
             self.view.showMessage("Failed to load character stats")
             return
         
         selected_stat = 0
-        stat_names = list(stats.keys())
+        stats = stats_rows[0]
         original_stats = stats.copy()
-        
+        stat_names = list(stats.keys())
+        message = None
         while True:
-            self.view.displayCharacterManagement(selected_character, stats, selected_stat)
+            self.view.displayCharacterManagement(selected_character, stats, selected_stat, message)
+            message = None
             key = getkey()
             
             if key == keys.UP:
@@ -251,16 +253,16 @@ class MenuController:
             elif key == keys.RIGHT:
                 stat_name = stat_names[selected_stat]
                 stats[stat_name] += 1
-            elif key == 's':
+            elif key == keys.ENTER:
                 if stats != original_stats:
-                    if self.updateCharacter(selected_character['id'], stats):
-                        self.view.showMessage("Character updated successfully!")
+                    if self.database.execute_query("edit_character", (stats["LifePoints"],stats["Mana"],stats["Strength"],
+                                                                      stats["Intelligence"],stats["Agility"], selected_character["CharID"])):
+                        message = "Character updated successfully!"
                         original_stats = stats.copy()
                     else:
-                        self.view.showMessage("Failed to update character")
+                        message = "Failed to save the changes"
             elif key == keys.ESCAPE:
-                if stats != original_stats:
-                    self.view.showMessage("Discarding unsaved changes")
+                self.menu = self.previousMenu.pop()
                 return
             
     

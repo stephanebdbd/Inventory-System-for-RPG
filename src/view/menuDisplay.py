@@ -101,12 +101,10 @@ class MenuDisplay:
         self.console.print(panel)
 
 
-    def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int):
+    def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int, message : str):
         body = [
-            f"Name: {character['name']}",
-            f"Class: {character['class']}",
-            f"Level: {character['level']}",
-            f"XP: {character['xp']}/{character['next_level_xp']}",
+            f"Name: {character['Name']}",
+            f"Class: {character['Class']}"
             ""
         ]
         
@@ -118,9 +116,12 @@ class MenuDisplay:
         body.extend([
             "",
             "[←/→] Adjust stat",
-            "[s] Save changes",
+            "[ENTER] Save changes",
             "[ESC] Return to list"
         ])
+
+        if message:
+            body.append(f"\n[red]{message}[/red]")
         
         panel = Panel(
             "\n".join(body),

@@ -93,8 +93,7 @@ WHERE Username = %s;
 
 --edit_character
 UPDATE Characters
-SET Class = %s,
-    LifePoints = %s,
+SET LifePoints = %s,
     Mana = %s,
     Strength = %s,
     Intelligence = %s,
@@ -136,8 +135,8 @@ FROM Inventory
 WHERE CharID = %s;
 
 --get_characters
-SELECT Name ,Class ,LifePoints,Mana ,Strength,Intelligence,Agility 
-From Characters;
+SELECT Name ,CharID, Class
+From Characters
 WHERE Username = %s;
 
 --get_itemID
@@ -159,7 +158,7 @@ SELECT QuestName
 FROM Quest;
 
 --get_stats
-SELECT Class ,LifePoints,Mana, Strength,Intelligence,Agility 
+SELECT LifePoints,Mana, Strength,Intelligence,Agility 
 FROM Characters
 WHERE CharID = %s;
 
