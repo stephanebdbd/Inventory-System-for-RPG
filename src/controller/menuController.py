@@ -443,7 +443,7 @@ class MenuController:
 
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
-                self.index_current = 0
+                self.currentIndex = 0
                 return
             
 
