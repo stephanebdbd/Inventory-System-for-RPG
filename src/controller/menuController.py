@@ -302,6 +302,7 @@ class MenuController:
         et acceder à l'inventory de un de ses characters
         """
         characters = self.database.execute_query("get_characters", (self.username, ))
+  
         index = 0
 
         while True:
@@ -317,10 +318,11 @@ class MenuController:
             elif key == keys.ENTER:
                 char_selected = characters[index]
                 inventory = self.database.execute_query("get_character_inventory",(char_selected["CharID"], ))
+                equipped_items = []  # equipement du joueur
                 item_index = 0
 
                 while True:
-                    self.view.displayCharacterInventory(char_selected, inventory, item_index)
+                    self.view.displayCharacterInventory(char_selected, inventory, item_index, equipped_items)
                     item_key = getkey()
 
                     if item_key == keys.UP:
@@ -337,6 +339,17 @@ class MenuController:
                         # Ajuste index su longueur dépassé de la liste
                         item_index = min(item_index, len(inventory) - 1 if inventory else 0)
 
+                    
+                    elif (item_key == 'a'  or item_key == 'A') and inventory:     #  si on appuie sur A  quand est sur un item de l inventory --> on ajoute item à l equipement du character
+                        item = inventory[item_index]
+                        id = item["InventoryID"]
+                        
+                        if id in equipped_items :
+                            equipped_items.remove(id)
+                        else:
+                            if len(equipped_items) < 4:             # maximum 4 items dans l'equipement su personnage (4 parce que 4 types d items)
+                                equipped_items.append(id)
+                        
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
