@@ -3,8 +3,9 @@ from model.menu import Menu
 from view.menuDisplay import MenuDisplay
 from getkey import getkey, keys
 from database.db import Database
-
+#******************************************🔻MENU🔻*****************************************************
 class MenuController:
+    #******************************************🔻CONSTRUCTURE🔻*****************************************************
     def __init__(self, db : Database):
         self.database = db
         self.username = ""
@@ -32,7 +33,7 @@ class MenuController:
         self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
         self.previousMenu = []
-
+#******************************************🔻RIGHT_MENU🔻*****************************************************
     def displayRightMenu(self):
         if self.menu.getTitle() == "Register" or self.menu.getTitle() == "Login":
             self.handleRegisterLogin()
@@ -76,7 +77,7 @@ class MenuController:
                     return
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
-
+#******************************************🔻AUTH🔻*****************************************************
     def handleRegisterLogin(self):
         login = self.menu.getTitle() == "Login"
         username = []
@@ -146,7 +147,7 @@ class MenuController:
                 else:
                     password.append(str(key))
             
-
+#******************************************🔻CHARACTERS🔻*****************************************************
     def handleCharacters(self):
         create_mode = self.menu.getTitle() == "Create A Character"
         
@@ -154,7 +155,7 @@ class MenuController:
             self.handleCreateCharacter()
         else:
             self.handleManageCharacters()
-
+#***********************🔻CREATE_CHARACTER🔻*********************************
     def handleCreateCharacter(self):
         classes = self.database.execute_query("get_all_classes")
         class_names = [ row['Name'] for row in classes ]
@@ -232,7 +233,7 @@ class MenuController:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return False
-
+#******************🔻MANAGE_CHARACTER🔻******************************
     def handleManageCharacters(self):
         characters = self.database.execute_query("get_characters", (self.username, ))
         if not characters:
@@ -294,7 +295,7 @@ class MenuController:
                 return
             
     
-    
+    #******************************************🔻Inventory🔻*****************************************************
     def handleCharacterInventory(self):
         """
         voir la liste de ses characters (d'un joueur)
@@ -342,7 +343,7 @@ class MenuController:
                 return  
 
 
-
+    #******************************************🔻Monster🔻*****************************************************
     def handleMonster(self):
         """
         voir l'ensemble des monstres du jeu
@@ -371,7 +372,7 @@ class MenuController:
                 self.currentIndex = 0
                 return
 
-
+    #******************************************🔻Quests🔻*****************************************************
 
     def handleQuests(self):
         """
@@ -402,7 +403,7 @@ class MenuController:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return
-
+    #******************************************🔻rankings🔻*****************************************************
     def handleRankings(self):
         ranking = self.database.execute_query(self.top_queries[self.menu.getTitle()])
         self.view.displayRanking(self.menu.getTitle(), ranking)
@@ -475,7 +476,7 @@ class MenuController:
                 return
                 
 
-
+    #******************************************🔻Profile🔻*****************************************************
     def handleProfile(self):
         result = self.database.execute_query("get_player", (self.username,))
         player_info = result[0]
