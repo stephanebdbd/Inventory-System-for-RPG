@@ -176,6 +176,8 @@ class MenuDisplay:
                 item_pointer = " "
             
             lines.append(Text(f"{item_pointer}{name} - {item_type}", style=style))
+            lines.append(Text("\n[DELETE] pour supprimer l'objet sélectionné", style="bold red"))
+
 
         panel_title=f"[bold cyan]Inventory of {char_name}[/bold cyan]"
         self.displayPanel(panel_title, lines, 60, self.panel_style)
@@ -221,7 +223,7 @@ class MenuDisplay:
         lines.append(Text("\nDescription :", style="bold cyan"))
         lines.append(Text(description, style="cyan"))
 
-        panel_title="[bold yellow] Quest information [/bold yellow]"
+        panel_title="[bold green] Quest information [/bold green]"
         self.displayPanel(panel_title, lines, 80, self.panel_style)
 
 
@@ -267,6 +269,28 @@ class MenuDisplay:
 
         panel_title = "[bold red]Monster Details[/bold red]"
         self.displayPanel(panel_title, lines, 60, "bright_magenta")
+
+
+    
+
+    def displayNpcList(self, npcs, index):
+        lines = []
+
+        for i, npc in enumerate(npcs):
+            npc_name = npc.get("npcName")
+
+            if i == index:
+                style = self.selected_style
+                pointer = "→ "
+            else:
+                style = self.default_style
+                pointer = "  "
+
+            lines.append(Text(f"{pointer}{npc_name}", style=style) + Text("\n"))
+
+        panel_title = "[bold green]NPC List[/bold green]"
+        self.displayPanel(panel_title, lines, 60, "bright_magenta")
+
 
 
 

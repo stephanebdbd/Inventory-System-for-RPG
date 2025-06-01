@@ -10,7 +10,7 @@ class MenuController:
         self.username = ""
         self.currentIndex = 0
         suite = [Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
-                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None)])]
+                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None), Menu("NPC",None)])]
         
         self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
@@ -27,6 +27,8 @@ class MenuController:
             self.handleCharacterInventory()
         if self.menu.getTitle() == "Monsters And Loot":
             self.handleMonster()
+        if self.menu.getTitle() == "NPC":
+            self.handleNpcQuests()
         self.view.displayMenu(self.menu, self.currentIndex)
 
     def launchView(self):
@@ -286,7 +288,23 @@ class MenuController:
             elif key == keys.ENTER:
                 char_selected = characters[index]
                 inventory = self.database.execute_query("get_character_inventory",(char_selected["CharID"], ))
-                self.view.displayCharacterInventory(char_selected, inventory, index)
+                item_index = 0
+
+                while True:
+                    self.view.displayCharacterInventory(char_selected, inventory, item_index)
+                    item_key = getkey()
+
+                    if item_key == keys.UP:
+                        item_index = max(0, item_index - 1)
+
+                    elif item_key == keys.DOWN:
+                        item_index = min(len(inventory) - 1, item_index + 1)
+
+                    elif item_key == keys.DELETE and inventory:
+                        item_to_delete = inventory[item_index]
+                        self.database.execute_query("delete_inventory_item", (item_to_delete["InventoryID"], item_to_delete["ItemID"] ))
+                               
+
 
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
@@ -327,10 +345,11 @@ class MenuController:
 
     def handleQuests(self):
         """
-        voir les quetes proposées par un npc
-        et quand on click sur une quete, voir les 
-        infos de la quete
+        voir toutes les quests du jeu
+        et voir les infos d'une quest 
+        quand on click
         """
+        
         quests =  self.database.execute_query("get_quests")  
         index = 0
 
@@ -351,7 +370,65 @@ class MenuController:
 
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
-                self.index_cuurent = 0
+                self.currentIndex = 0
                 return
 
 
+    def handleQuestByNpc(self):
+        """
+        Affiche la liste des NPCs.
+        
+        Quand l'utilisateur sélectionne un NPC, 
+        quand on click, affiche les quêtes associées à ce NPC.
+        """
+        npcs = self.database.execute_query("get_all_npc")
+        index = 0
+
+        while True:
+            self.view.displayNpcList(npcs, index)
+            key = getkey()
+
+            if key == keys.DOWN:
+                index = min(len(npcs) - 1, index + 1)
+
+            elif key == keys.UP:
+                index = max(0, index - 1)
+
+            elif key == keys.ENTER:
+                npc_chosen = npcs[index]
+                npc_name = npc_chosen['npcName']
+                # Récupérer les quêtes associées à ce NPC
+                quests = self.database.execute_query("get_quests_by_npc", (npc_name,))
+                self.handleNpcQuests(quests)  # les quests proposés par un npc
+
+            elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.index_current = 0
+                return
+            
+
+
+    def handleNpcQuests(self, quests):
+        """
+        voir les quetes proposées par un npc
+        et quand on click sur une quete, voir les 
+        infos de la quete
+        """
+        index = 0
+
+        while True:
+            self.view.displayQuestListNpc(quests, index)
+            key = getkey()
+
+            if key == keys.DOWN:
+                index = min(len(quests) - 1, index + 1)
+
+            elif key == keys.UP:
+                index = max(0, index - 1)
+
+            elif key == keys.ENTER:
+                quest_chosen = quests[index]
+                self.view.displayQuestInfo(quest_chosen)
+
+            elif key == keys.ESCAPE:
+                return

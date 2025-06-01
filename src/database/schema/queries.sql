@@ -25,6 +25,11 @@ INSERT INTO Inventory () VALUES ();
 INSERT IGNORE INTO InventoryItem (InventoryID, ItemID, AmountItem)
 VALUES (%s, %s, %s);
 
+--delete_inventory_item
+DELETE FROM InventoryItem
+Where InventoryID = %s AND ItemID = %s;
+
+
 --add_item
 INSERT IGNORE INTO Item (Name, Type, Price)
 VALUES (%s, %s, %s);
@@ -157,6 +162,22 @@ FROM Monster;
 --get_quests
 SELECT QuestName
 FROM Quest;
+
+--get_quests_by_npc
+SELECT q.QuestName
+FROM Quest q
+JOIN NPCQuest nq ON q.QuestID = nq.QuestID
+WHERE nq.npcID = ?; 
+
+
+--get_all_npc_and_quests
+SELECT Quest.QuestID, Quest.QuestName, Quest.Description, Quest.RewardXP, Quest.RewardGold
+FROM NPC
+JOIN NPCQuest ON NPC.npcID = NPCQuest.npcID
+JOIN Quest ON NPCQuest.QuestID = Quest.QuestID
+WHERE NPC.npcName = ?;
+
+
 
 --get_stats
 SELECT Class ,LifePoints,Mana, Strength,Intelligence,Agility 
