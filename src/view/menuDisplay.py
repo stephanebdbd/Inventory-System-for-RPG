@@ -293,6 +293,27 @@ class MenuDisplay:
         self.displayPanel(panel_title, lines, 60, "bright_magenta")
 
 
+    
+    def displayQuestListNpc(self, quests, index):
+        lines = []
+
+        for i, quest in enumerate(quests):
+            quest_title = quest.get("QuestTitle") or quest.get("Title") or "Unnamed Quest"
+
+            if i == index:
+                style = self.selected_style
+                pointer = "→ "
+            else:
+                style = self.default_style
+                pointer = "  "
+
+            lines.append(Text(f"{pointer}{quest_title}", style=style) + Text("\n"))
+
+        panel_title = "[bold green]Quests List[/bold green]"
+        self.displayPanel(panel_title, lines, 60, "bright_cyan")
+
+
+
 
 
     def displayPanel(self, title: str, lines: list, width, border_color: str = "bright_magenta",):
@@ -329,6 +350,11 @@ class MenuDisplay:
 
         panel = Panel(table, title=f"[bold yellow]{ranking_title}[/bold yellow]", border_style="magenta")
         self.console.print(panel)
+
+
+
+
+
 
     def displayProfile(self, info: dict):
         """

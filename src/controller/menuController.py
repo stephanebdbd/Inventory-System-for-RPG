@@ -46,7 +46,7 @@ class MenuController:
             self.handleMonster()
 
         if self.menu.getTitle() == "NPC":
-            self.handleNpcQuests()
+            self.handleQuestByNpc()
 
         if self.menu.getTitle() in self.top_queries.keys():
             self.handleRankings()
