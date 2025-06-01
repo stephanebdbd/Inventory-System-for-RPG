@@ -1,4 +1,3 @@
-from view.enumMenu import Menus
 from model.menu import Menu
 from view.menuDisplay import MenuDisplay
 from getkey import getkey, keys
@@ -401,10 +400,7 @@ class MenuController:
                 self.currentIndex = 0
                 return
 
-<<<<<<< HEAD
     #******************************************🔻Quests🔻*****************************************************
-=======
->>>>>>> 3580aa7214a7be9e27d4da4474fe3000c2dc330c
 
     def handleQuests(self):
         """
