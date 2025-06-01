@@ -9,4 +9,6 @@ write the mdp   -> YildizMyGoat1!
 run in mysql    -> SOURCE yourpathtotheproject/project2/src/database/schema/all.sql;
 or navigate to the schema folder then connect to mysql and just run SOURCE all.sql
 
+run in database ->python3 importData.py data
+
 run in /src     -> run python3 rpgg.py 
