@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS Spell (
     ManaCost    INT NOT NULL DEFAULT 0,
     Cooldown INT NOT NULL DEFAULT 0,
     AttackPower INT NOT NULL DEFAULT 0,
-    FOREIGN KEY (ClassName)     REFERENCES Class(Name),
+    FOREIGN KEY (ClassName)     REFERENCES Class(ClassName)
 );
