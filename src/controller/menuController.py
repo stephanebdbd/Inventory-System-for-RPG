@@ -9,8 +9,25 @@ class MenuController:
         self.database = db
         self.username = ""
         self.currentIndex = 0
+        self.top_queries = {
+            "Top 10 players by Gold":                        "TOPGOLD",
+            "Player with most characters of the same class": "RANK1",
+            "Quest with highest Gold per Difficulty ratio":  "TOPQUEST",
+            "NPC whose inventory has the highest cumulative Gold value": "TOPPNJ",
+            "Most frequently rewarded itemtype in level 5 quests":      "TOPITEM",
+            "Monsters with the best cumulative Gold loot relative to their LifePoints": "TOPMONSTER"
+        }
         suite = [Menu("Main", [Menu("Create A Character", None), Menu("Manage My Characters", None),
-                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("Quests", None), Menu("NPC",None)])]
+
+                               Menu("Items And Inventory", None), Menu("Monsters And Loot", None), Menu("NPC",None),
+                               
+                               Menu("Quests", None), Menu("Rankings", [Menu("Top 10 players by Gold", None),
+                                                                       Menu("Player with most characters of the same class", None),
+                                                                       Menu("Quest with highest Gold per Difficulty ratio", None),
+                                                                       Menu("NPC whose inventory has the highest cumulative Gold value", None),
+                                                                       Menu("Most frequently rewarded itemtype in level 5 quests", None),
+                                                                       Menu("Monsters with the best cumulative Gold loot relative to their LifePoints", None)]), Menu("Manage Profile", None)])]
+
         
         self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
@@ -27,10 +44,17 @@ class MenuController:
             self.handleCharacterInventory()
         if self.menu.getTitle() == "Monsters And Loot":
             self.handleMonster()
+
         if self.menu.getTitle() == "NPC":
             self.handleNpcQuests()
-        self.view.displayMenu(self.menu, self.currentIndex)
 
+        if self.menu.getTitle() in self.top_queries.keys():
+            self.handleRankings()
+        if self.menu.getTitle() == "Manage Profile":
+            self.handleProfile()
+
+        self.view.displayMenu(self.menu, self.currentIndex)
+        
     def launchView(self):
         while True:
             self.displayRightMenu()
@@ -206,6 +230,7 @@ class MenuController:
                 char_name = char_name[:-1]
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return False
 
     def handleManageCharacters(self):
@@ -218,7 +243,7 @@ class MenuController:
         selected_character = None
         
         while not selected_character:
-            self.view.displayCharacterList(characters, selected_index)
+            self.view.displayMyCharactersList(characters, selected_index)
             key = getkey()
             
             if key == keys.UP:
@@ -230,17 +255,19 @@ class MenuController:
             elif key == keys.ESCAPE:
                 return
         
-        stats = self.database.execute_query("get_stats", (selected_character['id'], ))
-        if not stats:
+        stats_rows = self.database.execute_query("get_stats", (selected_character['CharID'], ))
+        if not stats_rows:
             self.view.showMessage("Failed to load character stats")
             return
         
         selected_stat = 0
-        stat_names = list(stats.keys())
+        stats = stats_rows[0]
         original_stats = stats.copy()
-        
+        stat_names = list(stats.keys())
+        message = None
         while True:
-            self.view.displayCharacterManagement(selected_character, stats, selected_stat)
+            self.view.displayCharacterManagement(selected_character, stats, selected_stat, message)
+            message = None
             key = getkey()
             
             if key == keys.UP:
@@ -253,16 +280,17 @@ class MenuController:
             elif key == keys.RIGHT:
                 stat_name = stat_names[selected_stat]
                 stats[stat_name] += 1
-            elif key == 's':
+            elif key == keys.ENTER:
                 if stats != original_stats:
-                    if self.updateCharacter(selected_character['id'], stats):
-                        self.view.showMessage("Character updated successfully!")
+                    if self.database.execute_query("edit_character", (stats["LifePoints"],stats["Mana"],stats["Strength"],
+                                                                      stats["Intelligence"],stats["Agility"], selected_character["CharID"])):
+                        message = "Character updated successfully!"
                         original_stats = stats.copy()
                     else:
-                        self.view.showMessage("Failed to update character")
+                        message = "Failed to save the changes"
             elif key == keys.ESCAPE:
-                if stats != original_stats:
-                    self.view.showMessage("Discarding unsaved changes")
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return
             
     
@@ -373,6 +401,15 @@ class MenuController:
                 self.currentIndex = 0
                 return
 
+    def handleRankings(self):
+        ranking = self.database.execute_query(self.top_queries[self.menu.getTitle()])
+        self.view.displayRanking(self.menu.getTitle(), ranking)
+        while True:
+            key = getkey()
+            if key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                return
+
 
     def handleQuestByNpc(self):
         """
@@ -431,4 +468,19 @@ class MenuController:
                 self.view.displayQuestInfo(quest_chosen)
 
             elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
+                return
+                
+
+
+    def handleProfile(self):
+        result = self.database.execute_query("get_player", (self.username,))
+        player_info = result[0]
+        self.view.displayProfile(player_info)
+        while True:
+            key = getkey()
+            if key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return

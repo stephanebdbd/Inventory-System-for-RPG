@@ -98,8 +98,7 @@ WHERE Username = %s;
 
 --edit_character
 UPDATE Characters
-SET Class = %s,
-    LifePoints = %s,
+SET LifePoints = %s,
     Mana = %s,
     Strength = %s,
     Intelligence = %s,
@@ -119,6 +118,11 @@ WHERE QuestName = %s;
 --get_all_classes
 SELECT Name
 FROM Class
+
+--get_player
+SELECT Username, Password, Level, Username,Experience, MoneyGold, InventorySlots
+FROM Player
+WHERE Username = %s
 
 --get_all_items
 SELECT i.Name, i.Price,
@@ -141,8 +145,8 @@ FROM Inventory
 WHERE CharID = %s;
 
 --get_characters
-SELECT Name ,Class ,LifePoints,Mana ,Strength,Intelligence,Agility 
-From Characters;
+SELECT Name ,CharID, Class
+From Characters
 WHERE Username = %s;
 
 --get_itemID
@@ -180,9 +184,13 @@ WHERE NPC.npcName = ?;
 
 
 --get_stats
-SELECT Class ,LifePoints,Mana, Strength,Intelligence,Agility 
+SELECT LifePoints,Mana, Strength,Intelligence,Agility 
 FROM Characters
 WHERE CharID = %s;
+
+--register_player
+INSERT INTO Player (Username, Password) 
+VALUES (%s, %s);
 
 --RANK1
 SELECT j.Username, p.Class, COUNT(*) AS total
@@ -191,10 +199,6 @@ JOIN Characters p ON j.Username = p.Username
 GROUP BY j.Username, p.Class
 ORDER BY total DESC
 LIMIT 1;
-
---register_player
-INSERT INTO Player (Username, Password) 
-VALUES (%s, %s);
 
 --TOPGOLD
 SELECT Username, MoneyGold

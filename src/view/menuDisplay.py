@@ -3,6 +3,7 @@ from rich.panel import Panel
 from rich.style import Style
 from model.menu import Menu
 from rich.text import Text
+from rich.table import Table
 
 class MenuDisplay:
     def __init__(self):
@@ -28,7 +29,7 @@ class MenuDisplay:
             "\n".join(body),
             title=f"[bold yellow]{menu_title}[/bold yellow]",
             border_style=self.panel_style,
-            width=50,
+            width=70,
             padding=(1, 4))
         
         self.console.clear()
@@ -66,7 +67,6 @@ class MenuDisplay:
     def displayCharacterCreation(self, character_name: str, stats: dict, selected_index: int, points_left: int, message: str = None):
         body = []
         
-        
         prefix = "→ " if selected_index == 0 else "   "
         name_display = character_name if character_name else "[Unnamed]"
         body.append(f"{prefix}Name: {name_display}")
@@ -101,12 +101,10 @@ class MenuDisplay:
         self.console.print(panel)
 
 
-    def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int):
+    def displayCharacterManagement(self, character: dict, stats: dict, selected_index: int, message : str):
         body = [
-            f"Name: {character['name']}",
-            f"Class: {character['class']}",
-            f"Level: {character['level']}",
-            f"XP: {character['xp']}/{character['next_level_xp']}",
+            f"Name: {character['Name']}",
+            f"Class: {character['Class']}"
             ""
         ]
         
@@ -118,9 +116,12 @@ class MenuDisplay:
         body.extend([
             "",
             "[←/→] Adjust stat",
-            "[s] Save changes",
+            "[ENTER] Save changes",
             "[ESC] Return to list"
         ])
+
+        if message:
+            body.append(f"\n[red]{message}[/red]")
         
         panel = Panel(
             "\n".join(body),
@@ -309,3 +310,54 @@ class MenuDisplay:
         self.console.clear()
         self.console.print(panel)
 
+
+    def displayRanking(self, ranking_title: str, rows: list[dict]):
+        """
+        Show the ranking.
+        """
+
+        self.console.clear()
+
+        columns = list(rows[0].keys())
+        table = Table(show_header=True, header_style="bold magenta")
+
+        for col in columns:
+            table.add_column(col)
+
+        for row in rows:
+            table.add_row(*(str(row[col]) for col in columns))
+
+        panel = Panel(table, title=f"[bold yellow]{ranking_title}[/bold yellow]", border_style="magenta")
+        self.console.print(panel)
+
+    def displayProfile(self, info: dict):
+        """
+        Render the players profile in a small table inside a Panel.
+        Expects a dict with keys:
+          - Username
+          - Level
+          - MoneyGold
+          - InventorySlots
+        """
+
+        self.console.clear()
+
+        table = Table(show_header=False, box=None, pad_edge=False)
+        table.add_column(justify="right", style="cyan", no_wrap=True)
+        table.add_column()
+
+        table.add_row("Username:", str(info.get("Username", "")))
+        table.add_row("Password:", str(info.get("Password", "")))
+        table.add_row("Level:", str(info.get("Level", "")))
+        table.add_row("Money:", str(info.get("MoneyGold", "")))
+        table.add_row("Exp:", str(info.get("Experience", "")))
+        table.add_row("Inventory Slots:", str(info.get("InventorySlots", "")))
+
+        panel = Panel(
+            table,
+            title="[bold yellow]My Profile[/bold yellow]",
+            border_style="magenta",
+            padding=(1, 2),
+            width=50,
+        )
+        self.console.print(panel)
