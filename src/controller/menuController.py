@@ -142,68 +142,68 @@ class MenuController:
             "Agility": 10
         }
         points_left = 15
-        selected_stat = 0
+        selected_row = 0
         class_index = 0
         stat_names = list(stats.keys())
         message = None
         
         while True:
-            self.view.displayCharacterCreation(char_name, stats, selected_stat, points_left, message)
+            self.view.displayCharacterCreation(char_name, stats, selected_row, points_left, message)
             message = None
             key = getkey()
             
             if key == keys.UP:
-                selected_stat = max(0, selected_stat - 1)
+                selected_row = max(0, selected_row - 1)
             elif key == keys.DOWN:
-                selected_stat = min(len(stats) - 1, selected_stat + 1)
+                selected_row = min(len(stat_names), selected_row + 1)
             elif key == keys.LEFT:
-                stat_name = stat_names[selected_stat]
-                if stat_name == "Class":
-                    if class_index > 0:
-                        class_index -= 1
-                    else:
-                        class_index = len(class_names) - 1
-                    stats["Class"] = class_names[class_index]
+                if selected_row == 0:
+                    pass
                 else:
-                    if stats[stat_name] > 8:
-                        stats[stat_name] -= 1
-                        points_left += 1
+                    stat_name = stat_names[selected_row -1 ]
+                    if stat_name == "Class":
+                        if class_index > 0:
+                            class_index -= 1
+                        else:
+                            class_index = len(class_names) - 1
+                        stats["Class"] = class_names[class_index]
+                    else:
+                        if stats[stat_name] > 8:
+                            stats[stat_name] -= 1
+                            points_left += 1
             elif key == keys.RIGHT:
-                stat_name = stat_names[selected_stat]
-                if stat_name == "Class":
-                    if class_index < len(class_names) - 1:
-                        class_index += 1
-                    else:
-                        class_index = 0
-                    stats["Class"] = class_names[class_index]
+                if selected_row == 0:
+                    pass
                 else:
-                    if points_left > 0:
-                        stats[stat_name] += 1
-                        points_left -= 1
-            elif key == keys.ENTER:
-                # Name input
-                self.view.displayNameInput(char_name, "Enter character name")
-                name_key = getkey()
-                
-                if name_key == keys.ENTER:
-                    if char_name.strip():
-                        break  # Proceed to save
+                    stat_name = stat_names[selected_row -1]
+                    if stat_name == "Class":
+                        if class_index < len(class_names) - 1:
+                            class_index += 1
+                        else:
+                            class_index = 0
+                        stats["Class"] = class_names[class_index]
                     else:
-                        message = "Name cannot be empty"
-                elif name_key == keys.BACKSPACE:
-                    char_name = char_name[:-1]
-                elif name_key.isprintable():
-                    char_name += name_key
-            elif key == 's':
+                        if points_left > 0:
+                            stats[stat_name] += 1
+                            points_left -= 1
+            elif key == keys.ENTER:
                 if not char_name:
                     message = "Please set a name first (press ENTER)"
                 else:
-                    if self.saveCharacter(char_name, stats):
-                        self.view.showMessage("Character created successfully!")
+                    if self.database.execute_query("add_character", (char_name, stats["Class"], 
+                                                                     stats["LifePoints"], stats["Mana"], stats["Strength"],
+                                                                     stats["Intelligence"], stats["Agility"], self.username)):
+                        self.menu = self.previousMenu.pop()
                         return True
                     else:
                         message = "Failed to create character"
+            elif selected_row == 0 and isinstance(key, str) and key.isprintable():
+                char_name += key
+
+            elif key == keys.BACKSPACE and selected_row == 0:
+                char_name = char_name[:-1]
             elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
                 return False
 
     def handleManageCharacters(self):

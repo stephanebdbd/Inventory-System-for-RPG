@@ -66,23 +66,24 @@ class MenuDisplay:
     def displayCharacterCreation(self, character_name: str, stats: dict, selected_index: int, points_left: int, message: str = None):
         body = []
         
-        name_line = f"Character Name: {character_name if character_name else '[Unnamed]'}"
-        body.append(name_line)
+        
+        prefix = "→ " if selected_index == 0 else "   "
+        name_display = character_name if character_name else "[Unnamed]"
+        body.append(f"{prefix}Name: {name_display}")
         body.append("")
         
         body.append(f"[bold]Points left:[/bold] {points_left}")
         body.append("")
         
         stat_names = list(stats.keys())
-        for idx, stat in enumerate(stat_names):
+        for idx, stat in enumerate(stat_names, start=1):
             prefix = "→ " if idx == selected_index else "  "
             body.append(f"{prefix}{stat}: {stats[stat]}")
         
         body.extend([
             "",
-            "[←/→] Adjust stat",
-            "[s] Save character",
-            "[ESC] Cancel"
+        "[↑/↓] Move   [←/→] Change or edit",
+        "[ENTER] Save [ESC] Cancel"
         ])
         
         if message:
