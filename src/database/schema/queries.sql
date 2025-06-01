@@ -114,6 +114,11 @@ WHERE QuestName = %s;
 SELECT Name
 FROM Class
 
+--get_player
+SELECT Username, Password, Level, Username,Experience, MoneyGold, InventorySlots
+FROM Player
+WHERE Username = %s
+
 --get_all_items
 SELECT i.Name, i.Price,
   CASE 

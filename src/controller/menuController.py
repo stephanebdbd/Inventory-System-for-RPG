@@ -24,7 +24,7 @@ class MenuController:
                                                                        Menu("Quest with highest Gold per Difficulty ratio", None),
                                                                        Menu("NPC whose inventory has the highest cumulative Gold value", None),
                                                                        Menu("Most frequently rewarded itemtype in level 5 quests", None),
-                                                                       Menu("Monsters with the best cumulative Gold loot relative to their LifePoints", None)]), Menu("Profile", None)])]
+                                                                       Menu("Monsters with the best cumulative Gold loot relative to their LifePoints", None)]), Menu("Manage Profile", None)])]
         
         self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
@@ -43,6 +43,8 @@ class MenuController:
             self.handleMonster()
         if self.menu.getTitle() in self.top_queries.keys():
             self.handleRankings()
+        if self.menu.getTitle() == "Manage Profile":
+            self.handleProfile()
         self.view.displayMenu(self.menu, self.currentIndex)
         
     def launchView(self):
@@ -220,6 +222,7 @@ class MenuController:
                 char_name = char_name[:-1]
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return False
 
     def handleManageCharacters(self):
@@ -279,6 +282,7 @@ class MenuController:
                         message = "Failed to save the changes"
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return
             
     
@@ -379,4 +383,15 @@ class MenuController:
             key = getkey()
             if key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
+                return
+
+    def handleProfile(self):
+        result = self.database.execute_query("get_player", (self.username,))
+        player_info = result[0]
+        self.view.displayProfile(player_info)
+        while True:
+            key = getkey()
+            if key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return

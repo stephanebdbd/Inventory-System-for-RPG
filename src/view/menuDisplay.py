@@ -305,3 +305,35 @@ class MenuDisplay:
 
         panel = Panel(table, title=f"[bold yellow]{ranking_title}[/bold yellow]", border_style="magenta")
         self.console.print(panel)
+
+    def displayProfile(self, info: dict):
+        """
+        Render the players profile in a small table inside a Panel.
+        Expects a dict with keys:
+          - Username
+          - Level
+          - MoneyGold
+          - InventorySlots
+        """
+
+        self.console.clear()
+
+        table = Table(show_header=False, box=None, pad_edge=False)
+        table.add_column(justify="right", style="cyan", no_wrap=True)
+        table.add_column()
+
+        table.add_row("Username:", str(info.get("Username", "")))
+        table.add_row("Password:", str(info.get("Password", "")))
+        table.add_row("Level:", str(info.get("Level", "")))
+        table.add_row("Money:", str(info.get("MoneyGold", "")))
+        table.add_row("Exp:", str(info.get("Experience", "")))
+        table.add_row("Inventory Slots:", str(info.get("InventorySlots", "")))
+
+        panel = Panel(
+            table,
+            title="[bold yellow]My Profile[/bold yellow]",
+            border_style="magenta",
+            padding=(1, 2),
+            width=50,
+        )
+        self.console.print(panel)
