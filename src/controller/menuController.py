@@ -357,6 +357,9 @@ class MenuController:
                         inventory = self.database.execute_query("get_character_inventory", (char_selected["CharID"],))
                         # Ajuste index su longueur dépassé de la liste
                         item_index = min(item_index, len(inventory) - 1 if inventory else 0)
+                    
+                    elif item_key == keys.ESCAPE:
+                        break 
 
                     
                     elif (item_key == 'a'  or item_key == 'A') and inventory:     #  si on appuie sur A  quand est sur un item de l inventory --> on ajoute item à l equipement du character
