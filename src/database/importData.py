@@ -12,6 +12,29 @@ config = {
     "database": "rpgg",
 }
 
+sorted_spells = {
+    "Archer": ["026", "054", "076", "015", "034"],
+    "Assassin": ["006", "011", "066", "069", "072"],
+    "Barbare": ["021", "090", "007", "027", "082"],
+    "Berserker": ["005", "024", "038", "095", "085"],
+    "Chasseur": ["053", "019", "016", "063", "070"],
+    "Chevalier": ["010", "042", "013", "099", "048"],
+    "Démoniste": ["018", "061", "075", "030", "092"],
+    "Druide": ["003", "025", "014", "055", "083"],
+    "Enchanteresse": ["012", "040", "086", "094", "049"],
+    "Guerrier": ["041", "035", "087", "058", "089"],
+    "Illusionniste": ["023", "077", "052", "093", "068"],
+    "Mage": ["001", "002", "004", "008", "022"],
+    "Moine": ["057", "064", "060", "081", "097"],
+    "Nécromancien": ["031", "079", "046", "044", "071"],
+    "Paladin": ["009", "017", "036", "043", "100"],
+    "Prêtresse": ["003", "099", "045", "078", "050"],
+    "Rôdeur": ["028", "016", "053", "084", "098"],
+    "Sorcière": ["018", "061", "066", "075", "079"],
+    "Templier": ["010", "042", "096", "047", "037"],
+    "Voleur": ["006", "052", "084", "056", "088"]
+}
+
 
 def importXML(file_path: str, db: Database):
     """
@@ -343,11 +366,17 @@ def importCSV(file_path: str, db: Database):
                     except ValueError as e:
                         print(f"Skipping malformed spell row ({e}): {row}")
                         continue
+                    spell_class = ""
+                    for class_name, spell_ids in sorted_spells.items():
+                        for id in spell_ids:
+                            if id == spell_id:
+                                spell_class = class_name
+
 
                     try:
                         db.execute_query(
                             "add_spell",
-                            (spell_id, mana_cost, cooldown, power)
+                            (spell_id, mana_cost, cooldown, power, spell_class)
                         )
                     except Exception as e:
                         print(f"Erreur lors de l'insertion du sort {spell_id}: {e}")
