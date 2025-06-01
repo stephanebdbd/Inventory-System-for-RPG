@@ -1,4 +1,4 @@
-USE rpgg;
+USE rpg;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -30,14 +30,14 @@ DROP TABLE IF EXISTS Weapon;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
-SOURCE players.sql;
-SOURCE class.sql;
-SOURCE items.sql;
-SOURCE rewards.sql;
-SOURCE monsters.sql;
-SOURCE spells.sql;
-SOURCE quests.sql;
-SOURCE npcs.sql;
-SOURCE battles.sql;
-SOURCE characters.sql;
-SOURCE inventory.sql;
+SOURCE src/database/schema/players.sql;
+SOURCE src/database/schema/class.sql;
+SOURCE src/database/schema/items.sql;
+SOURCE src/database/schema/rewards.sql;
+SOURCE src/database/schema/monsters.sql;
+SOURCE src/database/schema/spells.sql;
+SOURCE src/database/schema/quests.sql;
+SOURCE src/database/schema/npcs.sql;
+SOURCE src/database/schema/battles.sql;
+SOURCE src/database/schema/characters.sql;
+SOURCE src/database/schema/inventory.sql;

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS NPC (
     npcID       INT AUTO_INCREMENT PRIMARY KEY,
     npcName     VARCHAR(100) NOT NULL,
-    npcDialogue TEXT NOT NULL
+    npcDialogue TEXT NOT NULL,
     ItemID INT NOT NULL,
     FOREIGN KEY (ItemID) REFERENCES Item(ItemID)
 );
