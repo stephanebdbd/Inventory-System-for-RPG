@@ -1,7 +1,6 @@
 from rich.console import Console
 from rich.panel import Panel
 from rich.style import Style
-from model.menu import Menu
 from rich.text import Text
 from rich.table import Table
 
