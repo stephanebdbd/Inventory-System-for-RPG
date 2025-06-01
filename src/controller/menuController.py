@@ -2,9 +2,9 @@ from model.menu import Menu
 from view.menuDisplay import MenuDisplay
 from getkey import getkey, keys
 from database.db import Database
-#******************************************🔻MENU🔻*****************************************************
+#****************************************** MENU *****************************************************
 class MenuController:
-    #******************************************🔻CONSTRUCTURE🔻*****************************************************
+    #****************************************** CONSTRUCTURE *****************************************************
     def __init__(self, db : Database):
         self.database = db
         self.username = ""
@@ -32,7 +32,13 @@ class MenuController:
         self.menu = Menu("Welcome", [Menu("Register", suite), Menu("Login", suite)])
         self.view = MenuDisplay()
         self.previousMenu = []
-#******************************************🔻RIGHT_MENU🔻*****************************************************
+
+
+
+
+
+
+#******************************************RIGHT_MENU*****************************************************
     def displayRightMenu(self):
         if self.menu.getTitle() == "Register" or self.menu.getTitle() == "Login":
             self.handleRegisterLogin()
@@ -76,7 +82,11 @@ class MenuController:
                     return
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
-#******************************************🔻AUTH🔻*****************************************************
+
+
+
+
+#****************************************** AUTH *****************************************************
     def handleRegisterLogin(self):
         login = self.menu.getTitle() == "Login"
         username = []
@@ -146,7 +156,9 @@ class MenuController:
                 else:
                     password.append(str(key))
             
-#******************************************🔻CHARACTERS🔻*****************************************************
+
+
+#******************************************  CHARACTERS *****************************************************
     def handleCharacters(self):
         create_mode = self.menu.getTitle() == "Create A Character"
         
@@ -154,7 +166,10 @@ class MenuController:
             self.handleCreateCharacter()
         else:
             self.handleManageCharacters()
-#***********************🔻CREATE_CHARACTER🔻*********************************
+
+
+
+#***********************CREATE_CHARACTER*********************************
     def handleCreateCharacter(self):
         classes = self.database.execute_query("get_all_classes")
         class_names = [ row['Name'] for row in classes ]
@@ -232,7 +247,10 @@ class MenuController:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return False
-#******************🔻MANAGE_CHARACTER🔻******************************
+            
+
+
+#******************MANAGE_CHARACTER******************************
     def handleManageCharacters(self):
         characters = self.database.execute_query("get_characters", (self.username, ))
         if not characters:
@@ -294,13 +312,14 @@ class MenuController:
                 return
             
     
-    #******************************************🔻Inventory🔻*****************************************************
+    #****************************************** Inventory *****************************************************
     def handleCharacterInventory(self):
         """
         voir la liste de ses characters (d'un joueur)
         et acceder à l'inventory de un de ses characters
         """
         characters = self.database.execute_query("get_characters", (self.username, ))
+  
         index = 0
 
         while True:
@@ -316,10 +335,11 @@ class MenuController:
             elif key == keys.ENTER:
                 char_selected = characters[index]
                 inventory = self.database.execute_query("get_character_inventory",(char_selected["CharID"], ))
+                equipped_items = []  # equipement du joueur
                 item_index = 0
 
                 while True:
-                    self.view.displayCharacterInventory(char_selected, inventory, item_index)
+                    self.view.displayCharacterInventory(char_selected, inventory, item_index, equipped_items)
                     item_key = getkey()
 
                     if item_key == keys.UP:
@@ -336,16 +356,24 @@ class MenuController:
                         # Ajuste index su longueur dépassé de la liste
                         item_index = min(item_index, len(inventory) - 1 if inventory else 0)
 
+                    
+                    elif (item_key == 'a'  or item_key == 'A') and inventory:     #  si on appuie sur A  quand est sur un item de l inventory --> on ajoute item à l equipement du character
+                        item = inventory[item_index]
+                        id = item["InventoryID"]
+                        
+                        if id in equipped_items :
+                            equipped_items.remove(id)
+                        else:
+                            if len(equipped_items) < 4:             # maximum 4 items dans l'equipement su personnage (4 parce que 4 types d items)
+                                equipped_items.append(id)
+                        
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return  
 
+    #****************************************** MONSTER *****************************************************
 
-<<<<<<< HEAD
-    #******************************************🔻Monster🔻*****************************************************
-=======
->>>>>>> 3580aa7214a7be9e27d4da4474fe3000c2dc330c
     def handleMonster(self):
         """
         voir l'ensemble des monstres du jeu
@@ -400,7 +428,12 @@ class MenuController:
                 self.currentIndex = 0
                 return
 
+<<<<<<< HEAD
     #******************************************🔻Quests🔻*****************************************************
+=======
+
+    #******************************************  QUEST  *****************************************************
+>>>>>>> a5dea4603cfb3c4dbf1f91f7e3b1515d794f1d6c
 
     def handleQuests(self):
         """
@@ -432,7 +465,11 @@ class MenuController:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return
-    #******************************************🔻rankings🔻*****************************************************
+            
+
+
+
+    #********************  RANKINGs  *******************************
     def handleRankings(self):
         ranking = self.database.execute_query(self.top_queries[self.menu.getTitle()])
         self.view.displayRanking(self.menu.getTitle(), ranking)
@@ -505,7 +542,7 @@ class MenuController:
                 return
                 
 
-    #******************************************🔻Profile🔻*****************************************************
+    #****************************************** Profile *****************************************************
     def handleProfile(self):
         result = self.database.execute_query("get_player", (self.username,))
         player_info = result[0]

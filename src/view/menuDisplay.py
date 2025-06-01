@@ -152,7 +152,7 @@ class MenuDisplay:
         self.displayPanel(panel_title, characters_to_show, 60, self.panel_style )
 
 
-    def displayCharacterInventory(self, character, items, index):
+    def displayCharacterInventory(self, character, items, index, equipped_items: list):
         char_name = character.get("Name")
         lines = []
 
@@ -168,6 +168,11 @@ class MenuDisplay:
                 item_type = f"(Healing: {item.get('Healing')})"
             elif "Effect" in item:
                 item_type = f"(Effect: {item.get('Effect')})"
+
+            if item.get("ItemID") in equipped_items:                 
+                item_in_equipment_marker = " [In Equipment] "    # pour indiquer qu elem est dans l equipemet du character
+            else:
+                item_in_equipment_marker = " "
             
             if i == index:
                 style = self.selected_style
@@ -175,12 +180,15 @@ class MenuDisplay:
             else:
                 style = self.default_style
                 item_pointer = " "
+
+           
             
-            lines.append(Text(f"{item_pointer}{name} - {item_type}", style=style))
-            lines.append(Text("\n[DELETE] pour supprimer l'objet sélectionné", style="bold red"))
+            lines.append(Text(f"{item_pointer}{name} - {item_type} ----- {item_in_equipment_marker}", style=style))
+        
+        lines.append(Text("\n[DELETE] pour supprimer l'objet sélectionné", style="bold red"))
 
 
-        panel_title=f"[bold cyan]Inventory of {char_name}[/bold cyan]"
+        panel_title = f"[bold cyan]Inventory of {char_name}[/bold cyan]"
         self.displayPanel(panel_title, lines, 60, self.panel_style)
 
 
