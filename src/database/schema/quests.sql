@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS Quest (
 
     FOREIGN KEY (RewardID) REFERENCES Reward(RewardID)
 );
+

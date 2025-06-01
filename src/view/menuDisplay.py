@@ -153,43 +153,49 @@ class MenuDisplay:
 
 
     def displayCharacterInventory(self, character, items, index, equipped_items: list):
-        char_name = character.get("Name")
+        char_name = character.get("Name", "Unknown")
         lines = []
 
-        for i, item in enumerate(items):
-            name = item.get("Name")
+        if not items:
+            lines.append(Text("No items to display.", style=self.default_style))
+        else:
+            for i, item in enumerate(items):
+                name = item.get("Name", "Unnamed")
 
-        # les chhamps spécifiques
-            if "AttackPower" in item:
-                item_type = f"(Attack: {item.get('AttackPower')})"
-            elif "Defense" in item:
-                item_type = f"(Defense: {item.get('Defense')})"
-            elif "Healing" in item:
-                item_type = f"(Healing: {item.get('Healing')})"
-            elif "Effect" in item:
-                item_type = f"(Effect: {item.get('Effect')})"
+                if "AttackPower" in item:
+                    item_type = f"(Attack: {item.get('AttackPower')})"
+                elif "Defense" in item:
+                    item_type = f"(Defense: {item.get('Defense')})"
+                elif "Healing" in item:
+                    item_type = f"(Healing: {item.get('Healing')})"
+                elif "Effect" in item:
+                    item_type = f"(Effect: {item.get('Effect')})"
+                else:
+                    item_type = "(No stats)"
 
-            if item.get("ItemID") in equipped_items:                 
-                item_in_equipment_marker = " [In Equipment] "    # pour indiquer qu elem est dans l equipemet du character
-            else:
-                item_in_equipment_marker = " "
-            
-            if i == index:
-                style = self.selected_style
-                item_pointer = "→ " 
-            else:
-                style = self.default_style
-                item_pointer = " "
+                if item.get("ItemID") in (equipped_items or []):
+                    item_in_equipment_marker = " [In Equipment] "
+                else:
+                    item_in_equipment_marker = " "
 
-           
-            
-            lines.append(Text(f"{item_pointer}{name} - {item_type} ----- {item_in_equipment_marker}", style=style))
-        
+                if i == index:
+                    style = self.selected_style
+                    item_pointer = "→ "
+                else:
+                    style = self.default_style
+                    item_pointer = " "
+
+                lines.append(
+                    Text(
+                        f"{item_pointer}{name} - {item_type} -----{item_in_equipment_marker}",
+                        style=style
+                    )
+                )
         lines.append(Text("\n[DELETE] pour supprimer l'objet sélectionné", style="bold red"))
-
 
         panel_title = f"[bold cyan]Inventory of {char_name}[/bold cyan]"
         self.displayPanel(panel_title, lines, 60, self.panel_style)
+
 
 
 
