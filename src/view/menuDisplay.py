@@ -260,11 +260,10 @@ class MenuDisplay:
         if loots:
             lines.append(Text("Loots:", style="bold underline"))
             for loot in loots:
-                if "ItemID" in loot:  #si c est un item (via item id)    
-                    lines.append(Text(f" {loot['ItemID']} x{loot.get('AmountItem',1)} ({loot.get('Probability')}%)"))
-                
-                elif "GoldQuantity" in loot: # si c'est de l'or
-                    lines.append(Text(f" Gold: {loot['GoldQuantity']} ({loot.get('GoldProbability')}%)"))
+                if loot["type"] == "item":
+                    lines.append(Text(f"  {loot['ItemName']} x{loot['AmountItem']} ({loot['Probability']}%)"))
+                else:
+                    lines.append(Text(f"  Gold: {loot['GoldQuantity']} ({loot['GoldProbability']}%)"))
         else:
             lines.append(Text("No loot info available."))
 
