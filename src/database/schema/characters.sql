@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS Characters (
     CharID          INT PRIMARY KEY AUTO_INCREMENT,
-    Name         VARCHAR(15) NOT NULL,
-    Class           VARCHAR(25) NOT NULL,
+    Name            VARCHAR(50) NOT NULL,
+    Class           VARCHAR(50) NOT NULL,
     LifePoints      INT NOT NULL DEFAULT 0,
     Mana            INT NOT NULL DEFAULT 0,
     Strength        INT NOT NULL DEFAULT 0,
     Intelligence    INT NOT NULL DEFAULT 0,
     Agility         INT NOT NULL DEFAULT 0,
-    Username        VARCHAR(25) NOT NULL,
+    Username        VARCHAR(50) NOT NULL,
     FOREIGN KEY (Username)  REFERENCES Player(Username),
     FOREIGN KEY (Class)     REFERENCES Class(Name)
 );

@@ -58,11 +58,18 @@ class Database:
         query = self.queries[queryKey]
         try:
             self.cursor.execute(query, params or ())
-            if query.strip().startswith("SELECT"):
+            verb = query.strip().split()[0].upper()
+
+            if verb == "SELECT":
                 return self.cursor.fetchall()
-            else:
+
+            if verb == "INSERT":
                 self.connection.commit()
-                return self.cursor.rowcount
+                return self.cursor.lastrowid
+
+            self.connection.commit()
+            return self.cursor.rowcount
+
         except Error as e:
             print(f"Erreur lors de l'exécution de la requête : {e}")
             self.connection.rollback()

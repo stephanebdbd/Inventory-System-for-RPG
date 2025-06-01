@@ -38,37 +38,77 @@ def importXML(file_path: str, db: Database):
                 (monster_id, monster_name, attack_val, defense_val, life_val)
             )
 
-            for drop_elem in monster.findall("drops/item"):
-                tag = drop_elem.tag.lower()
-                if tag == "or":
+            drops_node = monster.find("drops")
+            loot_id = None
+
+            if drops_node is not None:
+                gold_node = drops_node.find("Or")
+                if gold_node is not None:
+                    nbr  = gold_node.findtext("nombre")
+                    prob = gold_node.findtext("probabilité")
+
                     try:
-                        gold_qty  = int(drop_elem.findtext("quantité") or 0)
-                        gold_prob = float(drop_elem.findtext("probabilité") or 0)
-                    except ValueError as e:
-                        print(f"Skipping malformed gold drop ({e}): {xmlTree.tostring(drop_elem, encoding='unicode')}")
-                        continue
+                        gold_qty = int(nbr) if nbr else 0
+                    except (ValueError, TypeError):
+                        gold_qty = 0
+
+                    try:
+                        gold_prob = int(prob) if prob else 0
+                    except (ValueError, TypeError):
+                        gold_prob = 0
 
                     db.execute_query(
-                        "add_monster_gold_drop",
+                        "add_monster_loot",
                         (monster_id, gold_qty, gold_prob)
                     )
-                else:
-                    try:
-                        item_id     = int(drop_elem.findtext("item_id") or 0)
-                        quantity    = int(drop_elem.findtext("quantité") or 0)
-                        probability = float(drop_elem.findtext("probabilité") or 0)
-                    except ValueError as e:
-                        print(f"Skipping malformed item drop ({e}): {xmlTree.tostring(drop_elem, encoding='unicode')}")
+                    loot_id = db.cursor.lastrowid
+
+            if drops_node is not None and loot_id is None:
+                db.execute_query(
+                    "add_monster_loot",
+                    (monster_id, 0, 0)
+                )
+                loot_id = db.cursor.lastrowid
+
+            if drops_node is not None:
+                for drop_elem in drops_node:
+                    tag = drop_elem.tag
+                    if tag == "Or":
                         continue
+                    item_name = tag.replace("_", " ")
+                    item_name = item_name.replace(" d ", " d'")
+                    item_name = item_name.replace(" l ", " l'")
+                    if "Monture" in item_name:
+                        item_name = "Monture Volante (Hippogriffe en Peluche)"
+
+                    nbr  = drop_elem.findtext("nombre")
+                    prob = drop_elem.findtext("probabilité")
+
+                    try:
+                        amount_item = int(nbr) if nbr else 1
+                    except (ValueError, TypeError):
+                        amount_item = 1
+
+                    try:
+                        probability = int(prob) if prob else 0
+                    except (ValueError, TypeError):
+                        probability = 0
+
+                    rows = db.execute_query("get_itemID", (item_name,))
+                    if not rows:
+                        print(f"Item '{item_name}' not found for monster '{monster_name}' (ID {monster_id})")
+                        continue
+                    item_id = rows[0]["ItemID"]
 
                     db.execute_query(
-                        "add_monster_item_drop",
-                        (monster_id, item_id, quantity, probability)
+                        "add_item_dropped",
+                        (loot_id, item_id, probability, amount_item)
                     )
+
 
     elif "quetes" in filename or "quêtes" in filename:
         for quest in root.findall("quête"):
-            description = quest.findtext("Description") or ""
+            description = quest.findtext("Descripion") or ""
             quest_name  = quest.findtext("Nom") or ""
             try:
                 difficulty = int(quest.findtext("Difficulté") or 0)
@@ -79,29 +119,39 @@ def importXML(file_path: str, db: Database):
             except ValueError:
                 experience = 0
 
-            gold_reward = quest.findtext("Or")
+            gold_text = quest.findtext("Récompenses/Or")
             try:
-                gold_qty = int(gold_reward) if gold_reward else 0
+                gold_qty = int(gold_text) if gold_text else 0
             except ValueError:
                 gold_qty = 0
 
+            reward_id = db.execute_query("add_reward", (gold_qty,))
+
             db.execute_query(
                 "add_quest",
-                (description, quest_name, difficulty, experience, gold_qty)
+                (description, difficulty, experience, quest_name, reward_id)
             )
 
-            for rew in quest.findall("Récompenses/item"):
-                try:
-                    item_id     = int(rew.findtext("item_id") or 0)
-                    quantity    = int(rew.findtext("quantité") or 0)
-                    probability = float(rew.findtext("probabilité") or 0)
-                except ValueError as e:
-                    print(f"Skipping malformed quest reward ({e}): {xmlTree.tostring(rew, encoding='unicode')}")
+            for obj_elem in quest.findall("Récompenses/Objets"):
+                item_name = (obj_elem.text or "").strip()
+                if not item_name:
                     continue
 
+                existing = db.execute_query(
+                    "get_itemID",
+                    (item_name,)
+                )
+                if existing and len(existing) > 0:
+                    item_id = existing[0]["ItemID"]
+                else:
+                    item_id = db.execute_query(
+                        "add_item",
+                        (item_name, "Unknown", 0)
+                    )
+
                 db.execute_query(
-                    "add_quest_item_reward",
-                    (quest_name, item_id, quantity, probability)
+                    "add_item_reward",
+                    (item_id, reward_id)
                 )
 
 
@@ -178,9 +228,9 @@ def importCSV(file_path: str, db: Database):
                 raw_prop  = row.get("Propriétés")
                 raw_price = row.get("Prix")
 
-                if raw_name is None or raw_type is None or raw_prop is None or raw_price is None:
-                    print(f"Skipping malformed row (None found): {row}")
-                    continue
+                if raw_price is None:
+                    raw_price = raw_prop[-2:].strip()
+                    raw_prop  = raw_prop[:-2].strip()
 
                 name_val  = raw_name.strip()
                 type_val  = raw_type.strip()
@@ -203,7 +253,7 @@ def importCSV(file_path: str, db: Database):
                     continue
 
                 t = type_val.lower()
-                if t in ("armer", "sword", "arm e", "arme"):
+                if t in ("arme, sword"):
                     subtype = "arme"
                 elif t in ("armure",):
                     subtype = "armure"
@@ -308,6 +358,10 @@ def importCSV(file_path: str, db: Database):
 def importJSON(file_path: str, db: Database):
     """
     Import characters or NPCs from JSON files.
+    For each “personnage”, we:
+      1) INSERT IGNORE into Class(Name) so duplicates are skipped.
+      2) INSERT into Characters using the existing Player(Username) FK,
+         making sure the parameter order matches the table schema exactly.
     """
     filename = os.path.basename(file_path).lower()
     with open(file_path, "r", encoding="utf-8") as f:
@@ -316,44 +370,123 @@ def importJSON(file_path: str, db: Database):
         if "personnages" in filename:
             for character in data.get("personnages", []):
                 req_keys = ["Nom", "Classe", "Vie", "Mana", "Force", "Intelligence", "Agilite", "utilisateur"]
-                if all(k in character for k in req_keys):
-                    try:
-                        name     = character["Nom"]
-                        cls      = character["Classe"]
-                        life     = int(character["Vie"])
-                        mana     = int(character["Mana"])
-                        strength = int(character["Force"])
-                        intel    = int(character["Intelligence"])
-                        agility  = int(character["Agilite"])
-                        username = character["utilisateur"]
-                    except (ValueError, TypeError) as e:
-                        print(f"Skipping malformed character ({e}): {character}")
-                        continue
-
-                    try:
-                        db.execute_query(
-                            "add_character",
-                            (name, cls, life, mana, strength, intel, agility, username)
-                        )
-                    except Exception as e:
-                        print(f"Erreur lors de l'insertion du personnage '{name}': {e}")
-                else:
+                if not all(k in character for k in req_keys):
                     print(f"Skipping incomplete character entry: {character}")
+                    continue
+
+                raw_name     = character["Nom"]
+                raw_class    = character["Classe"]
+                raw_life     = character["Vie"]
+                raw_mana     = character["Mana"]
+                raw_str      = character["Force"]
+                raw_intel    = character["Intelligence"]
+                raw_agility  = character["Agilite"]
+                raw_user     = character["utilisateur"]
+
+                try:
+                    life_val = int(raw_life)
+                except (ValueError, TypeError):
+                    life_val = 0
+
+                try:
+                    mana_val = int(raw_mana)
+                except (ValueError, TypeError):
+                    mana_val = 0
+
+                try:
+                    strength_val = int(raw_str)
+                except (ValueError, TypeError):
+                    strength_val = 0
+
+                try:
+                    intel_val = int(raw_intel)
+                except (ValueError, TypeError):
+                    intel_val = 0
+
+                try:
+                    agility_val = int(raw_agility)
+                except (ValueError, TypeError):
+                    agility_val = 0
+                try:
+                    db.execute_query("add_class", (raw_class,))
+                except Exception as e:
+                    print(f"Error inserting Class '{raw_class}': {e}")
+                try:
+                    db.execute_query(
+                        "add_character",
+                        (
+                            raw_name,
+                            raw_class,
+                            life_val,
+                            mana_val,
+                            strength_val,
+                            intel_val,
+                            agility_val,
+                            raw_user
+                        )
+                    )
+                except Exception as e:
+                    print(f"Error inserting character '{raw_name}': {e}")
 
         elif "pnjs" in filename:
             for pnj in data.get("PNJs", []):
-                if "Nom" in pnj and "Dialogue" in pnj:
-                    name     = pnj["Nom"]
-                    dialogue = pnj["Dialogue"]
-                    try:
-                        db.execute_query(
-                            "add_npc",
-                            (name, dialogue)
-                        )
-                    except Exception as e:
-                        print(f"Erreur lors de l'insertion du PNJ '{name}': {e}")
-                else:
+                raw_name = str(pnj.get("Nom", "")).strip()
+                if not raw_name:
                     print(f"Skipping incomplete NPC entry: {pnj}")
+                    continue
+
+                dialogue_str = str(pnj.get("Dialogue", "")).strip()
+
+                try:
+                    db.execute_query("add_npc", (raw_name, dialogue_str))
+                    npc_id = db.cursor.lastrowid
+                except Exception as e:
+                    print(f"Error inserting PNJ '{raw_name}': {e}")
+                    continue
+
+                for raw_q in pnj.get("Quêtes", []):
+                    quest_name = str(raw_q).strip()
+                    if not quest_name:
+                        continue
+
+                    quest_rows = db.execute_query("find_quest_id", (quest_name,))
+                    if quest_rows and len(quest_rows) > 0:
+                        quest_id = quest_rows[0]["QuestID"]
+                        try:
+                            db.execute_query("add_npc_quest", (npc_id, quest_id))
+                        except Exception as e:
+                            print(f"  Error linking PNJ '{raw_name}' → quest '{quest_name}': {e}")
+                    else:
+                        print(f"Quest '{quest_name}' not found for PNJ '{raw_name}'")
+
+                inv_items = pnj.get("Inventaire", [])
+                if inv_items:
+                    try:
+                        db.execute_query("add_inventory", ())
+                        inv_id = db.cursor.lastrowid
+                    except Exception as e:
+                        print(f"  Error creating Inventory for PNJ '{raw_name}': {e}")
+                        continue
+
+                    try:
+                        db.execute_query("add_npc_inventory", (inv_id, npc_id))
+                    except Exception as e:
+                        print(f"  Error linking Inventory → PNJ '{raw_name}': {e}")
+
+                    for raw_item in inv_items:
+                        item_name = str(raw_item).strip()
+                        if not item_name:
+                            continue
+
+                        item_rows = db.execute_query("find_item_id", (item_name,))
+                        if item_rows and len(item_rows) > 0:
+                            item_id = item_rows[0]["ItemID"]
+                            try:
+                                db.execute_query("add_inventory_item", (inv_id, item_id, 1))
+                            except Exception as e:
+                                print(f"    Error adding item '{item_name}' to PNJ '{raw_name}' inventory: {e}")
+                        else:
+                            print(f"Item '{item_name}' not found (PNJ '{raw_name}').")
 
 
 def clear_screen():

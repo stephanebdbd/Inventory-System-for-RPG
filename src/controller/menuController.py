@@ -84,9 +84,7 @@ class MenuController:
                     if len(password)>=5:
                         if login:
                             result = self.database.execute_query("login_player", (''.join(username), ''.join(password)))
-                            if result is None:
-                                message = "Database error"
-                            elif len(result) > 0:
+                            if result and result>0:
                                 self.previousMenu.append(self.menu)
                                 self.menu = self.menu.getSons()[self.currentIndex]
                                 self.currentIndex = 0

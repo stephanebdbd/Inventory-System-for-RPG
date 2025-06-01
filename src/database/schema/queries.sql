@@ -1,8 +1,167 @@
---TOPGOLD
-SELECT Username, MoneyGold
+--add_artefact
+INSERT IGNORE INTO Artefact (ItemID, Effect)
+VALUES (%s, %s);
+
+--add_armor
+INSERT IGNORE INTO Armor (ItemID, Defense, Effect)
+VALUES (%s, %s, %s);
+
+--add_character
+INSERT INTO Characters (Username, Name, Class, LifePoints, Mana, Strength, Intelligence, Agility)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+
+--add_character
+INSERT INTO Characters (Name, Class, LifePoints, Mana, Strength, Intelligence, Agility, Username)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
+
+--add_class
+INSERT IGNORE INTO Class (Name)
+VALUES (%s);
+
+--add_inventory
+INSERT INTO Inventory () VALUES ();
+
+--add_inventory_item
+INSERT IGNORE INTO InventoryItem (InventoryID, ItemID, AmountItem)
+VALUES (%s, %s, %s);
+
+--add_item
+INSERT IGNORE INTO Item (Name, Type, Price)
+VALUES (%s, %s, %s);
+
+--add_item_reward
+INSERT INTO ItemReward (ItemID, RewardID)
+VALUES (%s, %s);
+
+--add_item_dropped
+INSERT INTO ItemDropped (LootID, ItemID, Probability, AmountItem)
+VALUES (%s, %s, %s, %s)
+
+--add_monster
+INSERT INTO Monster (MonsterID, MonsterName, Attack, Defense, LifePoints)
+VALUES (%s, %s, %s, %s, %s);
+
+--add_monster_loot
+INSERT INTO MonsterLoot (MonsterID, GoldQuantity, GoldProbability)
+VALUES (%s, %s, %s);
+
+--add_npc
+INSERT INTO NPC (npcName, npcDialogue)
+VALUES (%s, %s);
+
+--add_npc_inventory
+INSERT INTO NPCInventory (InventoryID, npcID)
+VALUES (%s, %s);
+
+--add_npc_quest
+INSERT IGNORE INTO NPCQuest (npcID, QuestID)
+VALUES (%s, %s);
+
+--add_player
+INSERT IGNORE INTO Player (Username, Level, Experience, MoneyGold, InventorySlots)
+VALUES (%s, %s, %s, %s, %s);
+
+--add_potion
+INSERT IGNORE INTO Potion (ItemID, Healing, Effect)
+VALUES (%s, %s, %s);
+
+--add_quest
+INSERT INTO Quest (Description, Difficulty, Exp, QuestName, RewardID)
+VALUES (%s, %s, %s, %s, %s);
+
+--add_reward
+INSERT INTO Reward (GoldQuantity)
+VALUES (%s);
+
+--add_spell
+INSERT INTO Spell (SpellID, ManaCost, Cooldown, AttackPower)
+VALUES (%s, %s, %s, %s);
+
+--add_weapon
+INSERT IGNORE INTO Weapon (ItemID, AttackPower, Effect)
+VALUES (%s, %s, %s);
+
+--check_login_player
+SELECT PlayerID, Username, Level, Experience, MoneyGold 
+FROM Player 
+WHERE Username = %s AND Password = %s;
+
+--check_username
+SELECT 1
 FROM Player
-ORDER BY MoneyGold DESC
-LIMIT 10;
+WHERE Username = %s;
+
+--edit_character
+UPDATE Characters
+SET Class = %s,
+    LifePoints = %s,
+    Mana = %s,
+    Strength = %s,
+    Intelligence = %s,
+    Agility = %s
+WHERE CharID = %s;
+
+--find_item_id
+SELECT ItemID
+FROM Item
+WHERE Name = %s;
+
+--find_quest_id
+SELECT QuestID
+FROM Quest
+WHERE QuestName = %s;
+
+--get_all_classes
+SELECT Name
+FROM Class
+
+--get_all_items
+SELECT i.Name, i.Price,
+  CASE 
+    WHEN w.ItemID IS NOT NULL THEN 'Weapon'
+    WHEN a.ItemID IS NOT NULL THEN 'Armor'
+    WHEN p.ItemID IS NOT NULL THEN 'Potion'
+    WHEN ar.ItemID IS NOT NULL THEN 'Artefact'
+    ELSE 'Other'
+  END AS ItemType
+FROM Item i
+LEFT JOIN Weapon w ON i.ItemID = w.ItemID
+LEFT JOIN Armor a ON i.ItemID = a.ItemID
+LEFT JOIN Potion p ON i.ItemID = p.ItemID
+LEFT JOIN Artefact ar ON i.ItemID = ar.ItemID;
+
+--get_character_inventory
+SELECT InventoryID 
+FROM Inventory 
+WHERE CharID = %s;
+
+--get_characters
+SELECT Name ,Class ,LifePoints,Mana ,Strength,Intelligence,Agility 
+From Characters;
+WHERE Username = %s;
+
+--get_itemID
+SELECT ItemID 
+FROM Item 
+WHERE Name = %s
+
+--get_monster_loot
+SELECT LootID
+FROM MonsterLoot ml
+WHERE MonsterID = %s;
+
+--get_monsters
+SELECT MonsterName
+FROM Monster;
+
+--get_quests
+SELECT QuestName
+FROM Quest;
+
+--get_stats
+SELECT Class ,LifePoints,Mana, Strength,Intelligence,Agility 
+FROM Characters
+WHERE CharID = %s;
 
 --RANK1
 SELECT j.Username, p.Class, COUNT(*) AS total
@@ -12,28 +171,15 @@ GROUP BY j.Username, p.Class
 ORDER BY total DESC
 LIMIT 1;
 
---TOPQUEST
-SELECT 
-    q.QuestName, 
-    q.Difficulty,
-    r.GoldQuantity
-FROM Quest q
-JOIN Reward r ON q.RewardID = r.RewardID
-WHERE q.Difficulty > 0
-ORDER BY (r.GoldQuantity / q.Difficulty) DESC
-LIMIT 1;
+--register_player
+INSERT INTO Player (Username, Password) 
+VALUES (%s, %s);
 
---TOPPNJ
-SELECT 
-    npc.npcName,
-    SUM(it.Price * ii.AmountItem) AS valeur_totale
-FROM NPC npc
-JOIN NPCInventory ni ON npc.npcID = ni.npcID
-JOIN InventoryItem ii ON ni.InventoryID = ii.InventoryID
-JOIN Item it ON ii.ItemID = it.ItemID
-GROUP BY npc.npcID
-ORDER BY valeur_totale DESC
-LIMIT 1;
+--TOPGOLD
+SELECT Username, MoneyGold
+FROM Player
+ORDER BY MoneyGold DESC
+LIMIT 10;
 
 --TOPITEM
 SELECT
@@ -70,122 +216,25 @@ JOIN Item i ON id.ItemID = i.ItemID
 GROUP BY m.MonsterID
 ORDER BY total_loot_value DESC;
 
---register_player
-INSERT INTO Player (Username, Password) 
-VALUES (%s, %s);
+--TOPPNJ
+SELECT 
+    npc.npcName,
+    SUM(it.Price * ii.AmountItem) AS valeur_totale
+FROM NPC npc
+JOIN NPCInventory ni ON npc.npcID = ni.npcID
+JOIN InventoryItem ii ON ni.InventoryID = ii.InventoryID
+JOIN Item it ON ii.ItemID = it.ItemID
+GROUP BY npc.npcID
+ORDER BY valeur_totale DESC
+LIMIT 1;
 
---check_login_player
-SELECT PlayerID, Username, Level, Experience, MoneyGold 
-FROM Player 
-WHERE Username = %s AND Password = %s;
-
---get_all_classes
-SELECT Name
-FROM Class
-
---add_monster
-INSERT INTO Monster (MonsterID, MonsterName, Attack, Defense, LifePoints)
-VALUES (%s, %s, %s, %s, %s);
-
---add_monster_drops
-INSERT INTO MonsterLoot (MonsterID, ItemID, Quantity, Probability)
-VALUES (%s, %s, %s, %s);
-
---add_quest
-INSERT INTO Quest (Description, QuestName, Difficulty, Experience, GoldQuantity)
-VALUES (%s, %s, %s, %s, %s);
-
---add_player
-INSERT IGNORE INTO Player (Username, Level, Experience, MoneyGold, InventorySlots)
-VALUES (%s, %s, %s, %s, %s);
-
---add_item
-INSERT IGNORE INTO Item (Name, Type, Price)
-VALUES (%s, %s, %s);
-
---add_weapon
-INSERT IGNORE INTO Weapon (ItemID, AttackPower, Effect)
-VALUES (%s, %s, %s);
-
---add_armor
-INSERT IGNORE INTO Armor (ItemID, Defense, Effect)
-VALUES (%s, %s, %s);
-
---add_potion
-INSERT IGNORE INTO Potion (ItemID, Healing, Effect)
-VALUES (%s, %s, %s);
-
---add_artefact
-INSERT IGNORE INTO Artefact (ItemID, Effect)
-VALUES (%s, %s);
-
---add_spell
-INSERT INTO Spell (SpellID, ManaCost, Cooldown, AttackPower)
-VALUES (%s, %s, %s, %s);
-
---add_character
-INSERT INTO Characters (Username, Name, Class, LifePoints, Mana, Strength, Intelligence, Agility)
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-
---add_npc
-INSERT INTO NPC (NPCName, Dialogue)
-VALUES (%s, %s);
-
---get_characters
-SELECT Name ,Class ,LifePoints,Mana ,Strength,Intelligence,Agility 
-From Characters;
-WHERE Username = %s;
-
---add_character
-INSERT INTO Characters (Name, Class, LifePoints, Mana, Strength, Intelligence, Agility, Username)
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
-
---edit_character
-UPDATE Characters
-SET Class = %s,
-    LifePoints = %s,
-    Mana = %s,
-    Strength = %s,
-    Intelligence = %s,
-    Agility = %s
-WHERE CharID = %s;
-
---get_stats
-SELECT Class ,LifePoints,Mana, Strength,Intelligence,Agility 
-FROM Characters
-WHERE CharID = %s;
---get_all_items
-SELECT i.Name, i.Price,
-  CASE 
-    WHEN w.ItemID IS NOT NULL THEN 'Weapon'
-    WHEN a.ItemID IS NOT NULL THEN 'Armor'
-    WHEN p.ItemID IS NOT NULL THEN 'Potion'
-    WHEN ar.ItemID IS NOT NULL THEN 'Artefact'
-    ELSE 'Other'
-  END AS ItemType
-FROM Item i
-LEFT JOIN Weapon w ON i.ItemID = w.ItemID
-LEFT JOIN Armor a ON i.ItemID = a.ItemID
-LEFT JOIN Potion p ON i.ItemID = p.ItemID
-LEFT JOIN Artefact ar ON i.ItemID = ar.ItemID;
-
---get_character_inventory
-SELECT InventoryID 
-FROM Inventory 
-WHERE CharID = %s;
-
---get_monsters
-SELECT MonsterName
-FROM Monster;
-
-
---get_monster_loot
-SELECT LootID
-FROM MonsterLoot ml
-WHERE MonsterID = %s;
-
-
---get_quests
-SELECT QuestName
-FROM Quest;
-
+--TOPQUEST
+SELECT 
+    q.QuestName, 
+    q.Difficulty,
+    r.GoldQuantity
+FROM Quest q
+JOIN Reward r ON q.RewardID = r.RewardID
+WHERE q.Difficulty > 0
+ORDER BY (r.GoldQuantity / q.Difficulty) DESC
+LIMIT 1;
