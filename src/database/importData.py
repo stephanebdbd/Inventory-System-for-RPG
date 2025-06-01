@@ -13,26 +13,26 @@ config = {
 }
 
 sorted_spells = {
-    "Archer": ["026", "054", "076", "015", "034"],
-    "Assassin": ["006", "011", "066", "069", "072"],
-    "Barbare": ["021", "090", "007", "027", "082"],
-    "Berserker": ["005", "024", "038", "095", "085"],
-    "Chasseur": ["053", "019", "016", "063", "070"],
-    "Chevalier": ["010", "042", "013", "099", "048"],
-    "Démoniste": ["018", "061", "075", "030", "092"],
-    "Druide": ["003", "025", "014", "055", "083"],
-    "Enchanteresse": ["012", "040", "086", "094", "049"],
-    "Guerrier": ["041", "035", "087", "058", "089"],
-    "Illusionniste": ["023", "077", "052", "093", "068"],
-    "Mage": ["001", "002", "004", "008", "022"],
-    "Moine": ["057", "064", "060", "081", "097"],
-    "Nécromancien": ["031", "079", "046", "044", "071"],
-    "Paladin": ["009", "017", "036", "043", "100"],
-    "Prêtresse": ["003", "099", "045", "078", "050"],
-    "Rôdeur": ["028", "016", "053", "084", "098"],
-    "Sorcière": ["018", "061", "066", "075", "079"],
-    "Templier": ["010", "042", "096", "047", "037"],
-    "Voleur": ["006", "052", "084", "056", "088"]
+    "Archer":        [15, 26, 34, 54, 76],
+    "Assassin":      [6, 11, 66, 69, 72],
+    "Barbare":       [7, 21, 27, 82, 90],
+    "Berserker":     [5, 24, 38, 85, 95],
+    "Chasseur":      [16, 19, 53, 63, 70],
+    "Chevalier":     [10, 13, 42, 48, 99],
+    "Démoniste":     [18, 30, 46, 61, 75, 32],
+    "Druide":        [3, 14, 25, 55, 83],
+    "Enchanteresse": [12, 40, 49, 74, 86, 94],
+    "Guerrier":      [35, 41, 58, 87, 89],
+    "Illusionniste": [23, 33, 52, 68, 77, 73, 93, 92],
+    "Mage":          [1, 2, 4, 8, 20, 22, 29, 39, 51, 65],
+    "Moine":         [57, 60, 64, 81, 97],
+    "Nécromancien":  [31, 44, 46, 71, 79],
+    "Paladin":       [9, 17, 36, 43, 48, 67, 99, 100],
+    "Prêtresse":     [3, 45, 50, 78, 80, 99],
+    "Rôdeur":        [16, 28, 53, 84, 98],
+    "Sorcière":      [18, 61, 62, 66, 75, 79, 59, 91],
+    "Templier":      [10, 37, 42, 47, 96],
+    "Voleur":        [6, 52, 56, 84, 88]
 }
 
 
@@ -360,23 +360,22 @@ def importCSV(file_path: str, db: Database):
                 if all(k in row for k in ["ID", "Coût en Mana", "Temps de Recharge", "Puissance d'Attaque"]):
                     try:
                         spell_id   = int(row["ID"])
+                        name       = row["Nom"].strip()
                         mana_cost  = int(row["Coût en Mana"])
                         cooldown   = int(row["Temps de Recharge"])
                         power      = int(row["Puissance d'Attaque"])
                     except ValueError as e:
                         print(f"Skipping malformed spell row ({e}): {row}")
                         continue
-                    spell_class = ""
-                    for class_name, spell_ids in sorted_spells.items():
-                        for id in spell_ids:
-                            if id == spell_id:
-                                spell_class = class_name
-
-
+                    spell_class = None
+                    for class_name, id_list in sorted_spells.items():
+                        if spell_id in id_list:
+                            spell_class = class_name
+                            break
                     try:
                         db.execute_query(
                             "add_spell",
-                            (spell_id, mana_cost, cooldown, power, spell_class)
+                            (spell_id, name, mana_cost, cooldown, power, spell_class)
                         )
                     except Exception as e:
                         print(f"Erreur lors de l'insertion du sort {spell_id}: {e}")
@@ -526,6 +525,8 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python import_data.py <directory_with_files>")
         return
+    
+    files = ["joueurs.csv", "objets.csv", "personnages.json", "sorts.csv", "quetes.xml", "monstres.xml", "pnjs.json"]
 
     db = Database(
         config["host"],
@@ -538,19 +539,11 @@ def main():
     clear_screen()
 
     print("Type the filename to import (or [q] to quit, [r] to clear).")
-    while True:
-        file = input("Enter file name: ").strip()
-        if file.lower() == "q":
-            break
-        if file.lower() == "r":
-            clear_screen()
-            continue
-
+    for file in files:
         full_path = os.path.join(sys.argv[1], file)
         if not os.path.isfile(full_path):
             print(f"File not found: {full_path}")
             continue
-
         ext = file.lower().rsplit(".", 1)[-1]
         if ext == "csv":
             importCSV(full_path, db)

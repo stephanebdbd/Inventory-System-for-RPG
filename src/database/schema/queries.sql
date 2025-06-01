@@ -74,8 +74,8 @@ INSERT INTO Reward (GoldQuantity)
 VALUES (%s);
 
 --add_spell
-INSERT INTO Spell (SpellID, ManaCost, Cooldown, AttackPower, ClassName)
-VALUES (%s, %s, %s, %s, %s);
+INSERT INTO Spell (SpellID, SpellName, ManaCost, Cooldown, AttackPower, ClassName)
+VALUES (%s, %s, %s, %s, %s, %s);
 
 --add_weapon
 INSERT IGNORE INTO Weapon (ItemID, AttackPower, Effect)
