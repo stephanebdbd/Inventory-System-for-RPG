@@ -509,7 +509,7 @@ class MenuController:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return
-            
+
 
 
     def handleNpcQuests(self, quests):
@@ -535,10 +535,8 @@ class MenuController:
                 self.view.displayQuestInfo(quest_chosen)
 
             elif key == keys.ESCAPE:
-                self.menu = self.previousMenu.pop()
-                self.currentIndex = 0
                 return
-                
+
 
     #****************************************** Profile *****************************************************
     def handleProfile(self):
