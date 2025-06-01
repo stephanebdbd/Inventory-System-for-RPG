@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS InventoryItem (
     InventoryID INT NOT NULL,
     ItemID      INT NOT NULL,
     AmountItem  INT NOT NULL DEFAULT 1,
+    Equiped     INT DEFAULT 0,
 
     PRIMARY KEY (InventoryID, ItemID),
     FOREIGN KEY (InventoryID)   REFERENCES Inventory(InventoryID),
