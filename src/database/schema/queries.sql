@@ -144,18 +144,34 @@ SELECT Name ,CharID, Class
 From Characters
 WHERE Username = %s;
 
+--get_item
+SELECT Name
+From Item
+WHERE ItemID = %s;
+
 --get_itemID
-SELECT ItemID 
+SELECT ItemID, 
 FROM Item 
 WHERE Name = %s
 
 --get_monster_loot
-SELECT LootID
-FROM MonsterLoot ml
+SELECT LootID, GoldQuantity, GoldProbability
+FROM MonsterLoot
 WHERE MonsterID = %s;
 
+--get_monster_items
+SELECT
+    id.ItemID,
+    i.Name      AS ItemName,
+    id.Probability,
+    id.AmountItem
+FROM ItemDropped AS id
+JOIN Item AS i ON id.ItemID = i.ItemID
+WHERE id.LootID = %s;
+
+
 --get_monsters
-SELECT MonsterName
+SELECT MonsterName, MonsterID, Attack, LifePoints, Defense
 FROM Monster;
 
 --get_quests

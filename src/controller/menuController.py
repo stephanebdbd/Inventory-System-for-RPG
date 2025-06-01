@@ -316,13 +316,11 @@ class MenuController:
                 return  
 
 
-
     def handleMonster(self):
         """
         voir l'ensemble des monstres du jeu
         et en clickant sur l'un, voir ses infos
         """
-
         monsters = self.database.execute_query("get_monsters")
         index = 0
         
@@ -336,15 +334,41 @@ class MenuController:
                 index = min(len(monsters) - 1, index + 1)
             elif key == keys.ENTER:
                 monster_selected = monsters[index]
-                monster_id = monster_selected.get("MonsterID")
-                monster_loots = self.database.execute_query("get_monster_loot", (monster_id, ))
-                self.view.displayMonsterInfo(monster_selected, monster_loots)
+                monster_id = monster_selected["MonsterID"]
 
+                raw_loots = self.database.execute_query("get_monster_loot", (monster_id,))
+                if raw_loots is None:
+                    raw_loots = []
+
+                combined_loots = []
+                for loot_row in raw_loots:
+                    combined_loots.append({
+                        "type":         "gold",
+                        "GoldQuantity": loot_row["GoldQuantity"],
+                        "GoldProbability": loot_row["GoldProbability"]
+                    })
+
+                    loot_id = loot_row["LootID"]
+                    item_rows = self.database.execute_query("get_monster_items", (loot_id,))
+                    if item_rows:
+                        for item_row in item_rows:
+                            combined_loots.append({
+                                "type":        "item",
+                                "ItemName":    item_row["ItemName"],
+                                "Probability": item_row["Probability"],
+                                "AmountItem":  item_row["AmountItem"]
+                            })
+
+                while True:
+                    self.view.displayMonsterInfo(monster_selected, combined_loots)
+                    key2 = getkey()
+                    if key2 == keys.ESCAPE:
+                        break
+                
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return
-
 
 
     def handleQuests(self):
