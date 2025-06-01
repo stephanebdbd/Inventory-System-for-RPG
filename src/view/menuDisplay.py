@@ -177,6 +177,8 @@ class MenuDisplay:
                 item_pointer = " "
             
             lines.append(Text(f"{item_pointer}{name} - {item_type}", style=style))
+            lines.append(Text("\n[DELETE] pour supprimer l'objet sélectionné", style="bold red"))
+
 
         panel_title=f"[bold cyan]Inventory of {char_name}[/bold cyan]"
         self.displayPanel(panel_title, lines, 60, self.panel_style)
@@ -222,7 +224,7 @@ class MenuDisplay:
         lines.append(Text("\nDescription :", style="bold cyan"))
         lines.append(Text(description, style="cyan"))
 
-        panel_title="[bold yellow] Quest information [/bold yellow]"
+        panel_title="[bold green] Quest information [/bold green]"
         self.displayPanel(panel_title, lines, 80, self.panel_style)
 
 
@@ -269,6 +271,49 @@ class MenuDisplay:
         self.displayPanel(panel_title, lines, 60, "bright_magenta")
 
 
+    
+
+    def displayNpcList(self, npcs, index):
+        lines = []
+
+        for i, npc in enumerate(npcs):
+            npc_name = npc.get("npcName")
+
+            if i == index:
+                style = self.selected_style
+                pointer = "→ "
+            else:
+                style = self.default_style
+                pointer = "  "
+
+            lines.append(Text(f"{pointer}{npc_name}", style=style) + Text("\n"))
+
+        panel_title = "[bold green]NPC List[/bold green]"
+        self.displayPanel(panel_title, lines, 60, "bright_magenta")
+
+
+    
+    def displayQuestListNpc(self, quests, index):
+        lines = []
+
+        for i, quest in enumerate(quests):
+            quest_title = quest.get("QuestTitle") or quest.get("Title") or "Unnamed Quest"
+
+            if i == index:
+                style = self.selected_style
+                pointer = "→ "
+            else:
+                style = self.default_style
+                pointer = "  "
+
+            lines.append(Text(f"{pointer}{quest_title}", style=style) + Text("\n"))
+
+        panel_title = "[bold green]Quests List[/bold green]"
+        self.displayPanel(panel_title, lines, 60, "bright_cyan")
+
+
+
+
 
     def displayPanel(self, title: str, lines: list, width, border_color: str = "bright_magenta",):
         """
@@ -304,6 +349,11 @@ class MenuDisplay:
 
         panel = Panel(table, title=f"[bold yellow]{ranking_title}[/bold yellow]", border_style="magenta")
         self.console.print(panel)
+
+
+
+
+
 
     def displayProfile(self, info: dict):
         """
