@@ -47,7 +47,7 @@ class MenuController:
             self.handleMonster()
 
         if self.menu.getTitle() == "NPC":
-            self.handleQuestByNpc()
+            self.handleNpc()
 
         if self.menu.getTitle() in self.top_queries.keys():
             self.handleRankings()
@@ -343,13 +343,15 @@ class MenuController:
                 return  
 
 
+<<<<<<< HEAD
     #******************************************🔻Monster🔻*****************************************************
+=======
+>>>>>>> 3580aa7214a7be9e27d4da4474fe3000c2dc330c
     def handleMonster(self):
         """
         voir l'ensemble des monstres du jeu
         et en clickant sur l'un, voir ses infos
         """
-
         monsters = self.database.execute_query("get_monsters")
         index = 0
         
@@ -363,20 +365,51 @@ class MenuController:
                 index = min(len(monsters) - 1, index + 1)
             elif key == keys.ENTER:
                 monster_selected = monsters[index]
-                monster_id = monster_selected.get("MonsterID")
-                monster_loots = self.database.execute_query("get_monster_loot", (monster_id, ))
-                self.view.displayMonsterInfo(monster_selected, monster_loots)
+                monster_id = monster_selected["MonsterID"]
 
+                raw_loots = self.database.execute_query("get_monster_loot", (monster_id,))
+                if raw_loots is None:
+                    raw_loots = []
+
+                combined_loots = []
+                for loot_row in raw_loots:
+                    combined_loots.append({
+                        "type":         "gold",
+                        "GoldQuantity": loot_row["GoldQuantity"],
+                        "GoldProbability": loot_row["GoldProbability"]
+                    })
+
+                    loot_id = loot_row["LootID"]
+                    item_rows = self.database.execute_query("get_monster_items", (loot_id,))
+                    if item_rows:
+                        for item_row in item_rows:
+                            combined_loots.append({
+                                "type":        "item",
+                                "ItemName":    item_row["ItemName"],
+                                "Probability": item_row["Probability"],
+                                "AmountItem":  item_row["AmountItem"]
+                            })
+
+                while True:
+                    self.view.displayMonsterInfo(monster_selected, combined_loots)
+                    key2 = getkey()
+                    if key2 == keys.ESCAPE:
+                        break
+                
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
                 self.currentIndex = 0
                 return
 
+<<<<<<< HEAD
     #******************************************🔻Quests🔻*****************************************************
+=======
+>>>>>>> 3580aa7214a7be9e27d4da4474fe3000c2dc330c
 
     def handleQuests(self):
         """
-        voir toutes les quests du jeu
+        voir TOUTES les quests du jeu
+       
         et voir les infos d'une quest 
         quand on click
         """
@@ -385,7 +418,7 @@ class MenuController:
         index = 0
 
         while True:
-            self.view.displayQuestListNpc(quests, index)
+            self.view.displayQuestList(quests, index)
             key = getkey()
 
             if key == keys.DOWN:
@@ -414,7 +447,7 @@ class MenuController:
                 return
 
 
-    def handleQuestByNpc(self):
+    def handleNpc(self):
         """
         Affiche la liste des NPCs.
         
@@ -443,7 +476,7 @@ class MenuController:
 
             elif key == keys.ESCAPE:
                 self.menu = self.previousMenu.pop()
-                self.index_current = 0
+                self.currentIndex = 0
                 return
             
 
