@@ -46,7 +46,7 @@ class MenuController:
             self.handleMonster()
 
         if self.menu.getTitle() == "NPC":
-            self.handleQuestByNpc()
+            self.handleNpc()
 
         if self.menu.getTitle() in self.top_queries.keys():
             self.handleRankings()
@@ -375,7 +375,8 @@ class MenuController:
 
     def handleQuests(self):
         """
-        voir toutes les quests du jeu
+        voir TOUTES les quests du jeu
+       
         et voir les infos d'une quest 
         quand on click
         """
@@ -384,7 +385,7 @@ class MenuController:
         index = 0
 
         while True:
-            self.view.displayQuestListNpc(quests, index)
+            self.view.displayQuestList(quests, index)
             key = getkey()
 
             if key == keys.DOWN:
@@ -413,7 +414,7 @@ class MenuController:
                 return
 
 
-    def handleQuestByNpc(self):
+    def handleNpc(self):
         """
         Affiche la liste des NPCs.
         
