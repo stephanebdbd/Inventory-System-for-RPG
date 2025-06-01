@@ -271,6 +271,8 @@ class MenuController:
             elif key == keys.ENTER:
                 selected_character = characters[selected_index]
             elif key == keys.ESCAPE:
+                self.menu = self.previousMenu.pop()
+                self.currentIndex = 0
                 return
         
         stats_rows = self.database.execute_query("get_stats", (selected_character['CharID'], ))
