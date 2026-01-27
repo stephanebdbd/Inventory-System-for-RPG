@@ -1,7 +1,9 @@
 # RPG Inventory System
 
 **Course:** INFO-H-303 - Databases
+
 **University:** Université Libre de Bruxelles (ULB)
+
 **Date:** March 2025
 
 ## 📜 Description
